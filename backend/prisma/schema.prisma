@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  
+  name          String
+  email         String   @unique
+  
+  password      String
+
+  refreshToken  RefreshToken[]
+  
+  movies        Movie[] @relation("UserMovies")
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  
+  tokenHash String    @unique
+  expiresIn DateTime
+  revoked   Boolean   @default(false)
+  
+  userId    String
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Movie {
+  id                String   @id @default(uuid())
+  
+  title             String   @unique
+  originalTitle     String   @unique
+  tagline           String
+  synopsis          String
+  genres            Genre[]
+
+  slug              String   @unique
+
+  backdropPath     String
+  posterPath       String
+
+  rating            Int
+  
+  voteCount         Int     
+  voteAverage       Decimal
+
+  duration          Int
+  
+  status            MovieStatus
+  
+  budget            Decimal
+  revenue           Decimal
+  
+  originalLanguage  String
+  
+  releaseDate       DateTime
+
+  trailerLink       String
+  
+  createdById       String
+  createdBy         User @relation("UserMovies", fields: [createdById], references: [id])
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Genre {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  movies    Movie[]
+}
+
+enum MovieStatus {
+  ANNOUNCED
+  PRE_PRODUCTION
+  FILMING
+  POST_PRODUCTION
+  COMPLETED
+  RELEASED
+  IN_THEATERS
+  STREAMING
+  CANCELLED
+  DELAYED
+  ARCHIVED
+}
