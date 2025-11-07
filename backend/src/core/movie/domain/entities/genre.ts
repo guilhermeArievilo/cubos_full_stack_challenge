@@ -13,7 +13,9 @@ export default class Genre {
   }>;
   
   public constructor(
-    props: GenreProps,
+    props: Replace<GenreProps, {
+      slug?: string;
+    }>,
     id?: string
   ) {
     this.props = {

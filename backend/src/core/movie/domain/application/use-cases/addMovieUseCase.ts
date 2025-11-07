@@ -13,8 +13,8 @@ export default class AddMovieUseCase {
     private userRepository: UserRepository
   ) {}
 
-  async execute(data: MovieProps, userId: string): Promise<void> {
-    const user = await this.userRepository.findById(userId);
+  async execute(data: MovieProps, email: string): Promise<void> {
+    const user = await this.userRepository.findByEmail(email);
     if (!user) throw new ResourceNotFoundError("User");
 
     const keys = Object.keys(data);

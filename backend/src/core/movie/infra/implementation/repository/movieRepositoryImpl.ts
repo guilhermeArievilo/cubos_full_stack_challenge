@@ -1,14 +1,12 @@
 import MovieRepository, { ListMoviesParamsRequestDto, PaginatedDataResponseDto } from "@/core/movie/domain/application/repository/movieRepository";
-import Genre, { GenreProps } from "@/core/movie/domain/entities/genre";
+import Genre from "@/core/movie/domain/entities/genre";
 import Movie, { MovieProps } from "@/core/movie/domain/entities/movie";
-import User from "@/core/user/domain/entity/user";
 import { PrismaService } from "@/shared/infra/db/prisma/database.service";
 import { Injectable } from "@nestjs/common";
-import MoviePrismaMapper from "../../datasource/db/prisma/mapper/moviePrismaMapper";
-import { MovieStatus, Prisma } from "@prisma/client";
-import MovieStatusPrismaMapper from "../../datasource/db/prisma/mapper/movieStatusPrismaMapper";
-import MovieGenrePrismaMapper from "../../datasource/db/prisma/mapper/movieGenrePrismaMapper";
-
+import { Prisma } from "@prisma/client";
+import MoviePrismaMapper from "../datasource/db/prisma/mapper/moviePrismaMapper";
+import MovieStatusPrismaMapper from "../datasource/db/prisma/mapper/movieStatusPrismaMapper";
+import MovieGenrePrismaMapper from "../datasource/db/prisma/mapper/movieGenrePrismaMapper";
 @Injectable()
 export default class MovieRepositoryImpl implements MovieRepository {
   constructor(

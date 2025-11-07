@@ -1,0 +1,71 @@
+import { MovieStatus } from "@/core/movie/domain/entities/movieStatus";
+import { IsInt, IsOptional, IsPositive, IsString } from "class-validator";
+import { GenreHttpDto } from "./genreHttpDto";
+
+export default class UpdateMovieBodyDTO {
+  @IsOptional()
+  @IsString()
+  title: string;
+
+  @IsOptional()
+  @IsString()
+  originalTitle: string;
+
+  @IsOptional()
+  @IsString()
+  tagline: string;
+
+  @IsOptional()
+  @IsString()
+  synopsis: string;
+
+  @IsOptional()
+  genres: GenreHttpDto[];
+
+  @IsOptional()
+  @IsString()
+  backdropPath: string;
+
+  @IsOptional()
+  @IsString()
+  posterPath: string;
+  
+  @IsOptional()
+  @IsPositive()
+  rating: number;
+  
+  @IsOptional()
+  @IsPositive()
+  voteCount: number;
+  
+  @IsOptional()
+  @IsPositive()
+  voteAverage: number;
+  
+  @IsOptional()
+  @IsPositive()
+  @IsInt()
+  duration: number;
+
+  @IsOptional()
+  status: MovieStatus;
+  
+  @IsOptional()
+  @IsPositive()
+  budget: number;
+  
+  @IsOptional()
+  @IsPositive()
+  revenue: number;
+  
+  @IsOptional()
+  @IsString()
+  originalLanguage: string;
+
+  @IsOptional()
+  @IsString()
+  trailerLink: string;
+
+  @IsOptional()
+  releaseDate: Date;
+}

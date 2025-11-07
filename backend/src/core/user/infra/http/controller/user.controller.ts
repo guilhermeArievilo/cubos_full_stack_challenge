@@ -1,6 +1,7 @@
-import CreateUserUseCase from "@/core/users/domain/application/use-cases/createUserUseCase";
-import FindUserByEmailUseCase from "@/core/users/domain/application/use-cases/findUserByEmailUseCase";
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Post, Req, UseGuards } from "@nestjs/common";
+
+import FindUserByEmailUseCase from "@/core/user/domain/application/use-cases/findUserByEmailUseCase";
+import CreateUserUseCase from "@/core/user/domain/application/use-cases/createUserUseCase";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 import UserViewModel from "../presentation/view-models/userViewModel";
 import ResourceNotFoundError from "@/shared/exceptions/resourceNotFoundError";
 import RequiredFieldError from "@/shared/exceptions/requiredFieldError";

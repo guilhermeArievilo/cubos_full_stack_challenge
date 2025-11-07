@@ -1,6 +1,5 @@
-import User from "@/core/user/domain/entity/user";
 import Movie, { MovieProps } from "../../entities/movie";
-import Genre, { GenreProps } from "../../entities/genre";
+import Genre from "../../entities/genre";
 
 export type ListDataRequestDto<T> = {
   page?: number;
@@ -23,7 +22,7 @@ export type ListMoviesParamsRequestDto = ListDataRequestDto<MovieProps> & {
     end: Date
   },
   duration?: number,
-  genre: string
+  genre?: string
 };
 
 export default abstract class MovieRepository {
