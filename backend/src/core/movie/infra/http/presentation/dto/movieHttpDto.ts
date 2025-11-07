@@ -1,7 +1,7 @@
 import { MovieStatus } from "@/core/movie/domain/entities/movieStatus";
 import { GenreHttpDto } from "./genreHttpDto";
 
-export type MovieHttpDTO = {
+export class MovieHttpDTO {
   id: string;
   title: string;
   originalTitle: string;

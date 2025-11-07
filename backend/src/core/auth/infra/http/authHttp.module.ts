@@ -5,10 +5,10 @@ import { AuthController } from "./controller/auth.controller";
 import LoginUseCase from "../../domain/application/use-cases/loginUseCase";
 import LogoutUseCase from "../../domain/application/use-cases/logoutUseCase";
 import RefreshUseCase from "../../domain/application/use-cases/refreshUseCase";
-import UserRepositoryImpl from "@/core/users/infra/db/prisma/repository/userRepositoryImpl";
-import UserRepository from "@/core/users/domain/application/repository/userRepository";
 import { PrismaService } from "@/shared/infra/db/prisma/database.service";
 import { JwtStrategy } from "@/shared/infra/jwt/jwt.strategy";
+import UserRepository from "@/core/user/domain/application/repository/userRepository";
+import UserRepositoryImpl from "@/core/user/infra/db/prisma/repository/userRepositoryImpl";
 
 @Module({
   imports: [AuthDatabaseModule],

@@ -1,4 +1,4 @@
-import User from "@/core/users/domain/entity/user";
+import User from "@/core/user/domain/entity/user";
 
 export default class UserViewModel {
   static toHttp(data: User) {

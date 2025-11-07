@@ -17,7 +17,10 @@ import UpdateMovieUseCase from "@/core/movie/domain/application/use-cases/update
 import FindUserByEmailUseCase from "@/core/user/domain/application/use-cases/findUserByEmailUseCase";
 import DeleteMovieUseCase from "@/core/movie/domain/application/use-cases/deleteMovieUseCase";
 import { PartialHttpMovieDTO } from "../presentation/dto/partialHttpMovieDto";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
+@ApiBearerAuth()
+@ApiTags('Movies')
 @UseGuards(JwtAuthGuard)
 @Controller('movie')
 export class MovieController {
@@ -30,6 +33,8 @@ export class MovieController {
     private findUserByEmailUseCase: FindUserByEmailUseCase,
   ) {}
 
+  @ApiOperation({ summary: 'Cadastrar um novo filme' })
+  @ApiResponse({ status: 201 })
   @Post('/register')
   @HttpCode(HttpStatus.CREATED)
   async addMovie(
@@ -46,6 +51,7 @@ export class MovieController {
     return;
   }
 
+  @ApiOperation({ summary: 'Buscar um filme pelo seu slug' })
   @Get('/:slug')
   async getMovieBySlug(@Param('slug') slug: string) {
     const domainMovie = await this.getMovieBySlugUseCase.execute(slug);

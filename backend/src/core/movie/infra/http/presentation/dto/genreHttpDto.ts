@@ -1,5 +1,5 @@
-export type GenreHttpDto = {
-  id: string,
-  name: string,
-  slug: string
+export class GenreHttpDto {
+  id: string;
+  name: string;
+  slug: string;
 }

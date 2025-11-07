@@ -1,6 +1,6 @@
 import { GenreHttpDto } from "./genreHttpDto";
 
-export type PartialHttpMovieDTO = {
+export class PartialHttpMovieDTO {
   id: string;
   title: string;
   genres: GenreHttpDto[];

@@ -1,8 +1,9 @@
-import UserRepository, { CreateUserDTO } from "@/core/users/domain/application/repository/userRepository";
-import User from "@/core/users/domain/entity/user";
+
 import { PrismaService } from "@/shared/infra/db/prisma/database.service";
 import { Injectable } from "@nestjs/common";
 import UserPrismaMapper from "../mapper/userPrismaMapper";
+import UserRepository, { CreateUserDTO } from "@/core/user/domain/application/repository/userRepository";
+import User from "@/core/user/domain/entity/user";
 
 @Injectable()
 export default class UserRepositoryImpl implements UserRepository {
