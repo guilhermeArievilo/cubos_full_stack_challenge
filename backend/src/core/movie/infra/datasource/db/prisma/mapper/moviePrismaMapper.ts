@@ -1,6 +1,6 @@
 import Movie from '@/core/movie/domain/entities/movie';
 import Genre from '@/core/movie/domain/entities/genre';
-import { Prisma, $Enums, Movie as RawMovie, Genre as RawGenre } from '@prisma/client';
+import { Prisma, Movie as RawMovie, Genre as RawGenre, $Enums } from '@prisma/client';
 
 type RawMovieWithGenres = RawMovie & {
   genres: RawGenre[];

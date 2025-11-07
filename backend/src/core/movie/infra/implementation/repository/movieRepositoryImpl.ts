@@ -4,6 +4,7 @@ import Movie, { MovieProps } from "@/core/movie/domain/entities/movie";
 import User from "@/core/user/domain/entity/user";
 import { PrismaService } from "@/shared/infra/db/prisma/database.service";
 import { Injectable } from "@nestjs/common";
+import MoviePrismaMapper from "../../datasource/db/prisma/mapper/moviePrismaMapper";
 
 @Injectable()
 export default class MovieRepositoryImpl implements MovieRepository {
@@ -16,15 +17,27 @@ export default class MovieRepositoryImpl implements MovieRepository {
   }
 
   async getMovieById(id: string): Promise<Movie | null> {
-    const rawMovieData = await this.prismaService.movie.findUnique({ where: { id } });
+    const rawMovieData = await this.prismaService.movie.findUnique({
+      where: { id },
+      include: { genres: true }
+    });
     
     if (!rawMovieData) return null;
 
-    return null;
+    return MoviePrismaMapper.toDomain(rawMovieData);
   }
-  getMovieBySlug(slug: string): Promise<Movie | null> {
-    throw new Error("Method not implemented.");
+
+  async getMovieBySlug(slug: string): Promise<Movie | null> {
+    const rawMovieData = await this.prismaService.movie.findUnique({
+      where: { slug },
+      include: { genres: true }
+    });
+
+    if (!rawMovieData) return null;
+
+    return MoviePrismaMapper.toDomain(rawMovieData);
   }
+
   addMovie(movie: MovieProps, createdBy: User): Promise<void> {
     throw new Error("Method not implemented.");
   }
