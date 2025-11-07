@@ -30,12 +30,12 @@ export default abstract class MovieRepository {
   abstract listMovies(params: ListMoviesParamsRequestDto): Promise<PaginatedDataResponseDto<Movie>>
   abstract getMovieById(id: string): Promise<Movie | null>
   abstract getMovieBySlug(slug: string): Promise<Movie | null>
-  abstract addMovie(movie: MovieProps, createdBy: User): Promise<void>
+  abstract addMovie(movie: Movie): Promise<void>
   abstract updateMovie(id: string, movie: Partial<MovieProps>): Promise<void>
   abstract deleteMovie(id: string): Promise<void>
   abstract findMovieByTitle(title: string): Promise<Movie | null>
   abstract findMovieByOriginalTitle(originalTitle: string): Promise<Movie | null>
-  abstract addGenre(props: GenreProps): Promise<Genre>
+  abstract addGenre(props: Genre): Promise<Genre>
   abstract findGenreBySlug(slug: string): Promise<Genre | null>
   abstract listGenres(): Promise<Genre[]>
 }

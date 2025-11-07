@@ -1,6 +1,8 @@
 import Movie from '@/core/movie/domain/entities/movie';
 import Genre from '@/core/movie/domain/entities/genre';
-import { Prisma, Movie as RawMovie, Genre as RawGenre, $Enums } from '@prisma/client';
+import { Prisma, Movie as RawMovie, Genre as RawGenre, $Enums, MovieStatus } from '@prisma/client';
+import MovieStatusPrismaMapper from './movieStatusPrismaMapper';
+import MovieGenrePrismaMapper from './movieGenrePrismaMapper';
 
 type RawMovieWithGenres = RawMovie & {
   genres: RawGenre[];
@@ -21,7 +23,7 @@ export default class MoviePrismaMapper {
       voteCount: movie.voteCount,
       voteAverage: movie.voteAverage,
       duration: movie.duration,
-      status: movie.status as unknown as $Enums.MovieStatus,
+      status: MovieStatusPrismaMapper.toPrismaStatus(movie.status),
       budget: movie.budget,
       revenue: movie.revenue,
       originalLanguage: movie.originalLanguage,
@@ -37,7 +39,7 @@ export default class MoviePrismaMapper {
   }
 
   static toDomain(raw: RawMovieWithGenres): Movie {
-  const genres: Genre[] = raw.genres.map(g => new Genre({ name: g.name }))
+  const genres: Genre[] = raw.genres.map(genre => MovieGenrePrismaMapper.toDomain(genre))
 
     return new Movie({
       title: raw.title,
@@ -52,7 +54,7 @@ export default class MoviePrismaMapper {
       voteCount: raw.voteCount,
       voteAverage: Number(raw.voteAverage),
       duration: raw.duration,
-      status: raw.status as any,
+      status: MovieStatusPrismaMapper.fromPrismaStatus(raw.status),
       budget: Number(raw.budget),
       revenue: Number(raw.revenue),
       originalLanguage: raw.originalLanguage,

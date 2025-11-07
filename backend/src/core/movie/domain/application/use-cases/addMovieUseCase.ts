@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Move } from "@nestjs/common";
 import MovieRepository from "../repository/movieRepository";
-import { MovieProps } from "../../entities/movie";
+import Movie, { MovieProps } from "../../entities/movie";
 import UserRepository from "@/core/user/domain/application/repository/userRepository";
 import ResourceNotFoundError from "@/shared/exceptions/resourceNotFoundError";
 import RequiredFieldError from "@/shared/exceptions/requiredFieldError";
@@ -37,8 +37,8 @@ export default class AddMovieUseCase {
       });
     }
 
-    
+    const movie = new Movie(data, user.id!);
 
-    await this.movieRepository.addMovie(data, user);
+    await this.movieRepository.addMovie(movie);
   }
 }
