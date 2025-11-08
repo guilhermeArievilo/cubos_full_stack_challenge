@@ -1,5 +1,4 @@
 'use client'
-import Component from "@/components/comp-461";
 import { Button } from "@/components/ui/button";
 import SearchForm from "@/core/features/movie/presentation/components/searchForm";
 import AddGenreDialog from "@/core/features/movie/presentation/dialogs/add-genre/add-genre-dialog";
@@ -43,10 +42,7 @@ export default function HomePage() {
       <section className="flex-1 grid grid-cols-10 gap-6 bg-surface-container-highest/20 p-6 mx-6">
         <span className="col-span-10 flex items-center justify-center text-on-surface-variant/40">Nenhum filme por enquanto...</span>
       </section>
-
-      <section className="p-6 flex justify-center gap-4">
-        <Component currentPage={1} totalPages={5}/>
-      </section>
+      
       <AddMovieDrawer
         open={triggerAddMovieDrawer}
         onOpenChange={setTriggerAddMovieDrawer}

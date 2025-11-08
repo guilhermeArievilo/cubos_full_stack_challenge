@@ -29,10 +29,10 @@ export default function AddMovieDrawer({
             </DrawerClose>
           </Button>
         </DrawerHeader>
-        <div className="px-6">
+        <div className="px-6 flex-1 overflow-y-auto">
           <AddMovieForm handleSubmit={() => console.log('ok')} onCreateGenre={onCreateGenre} genres={genreDataOptions}/>
         </div>
-        <DrawerFooter className="flex-1 flex-row justify-end gap-4 items-end">
+        <DrawerFooter className="flex-row justify-end gap-4 items-end">
           <Button variant="secondary" asChild>
             <DrawerClose>
               Cancelar 
