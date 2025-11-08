@@ -4,6 +4,7 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 import { X } from "lucide-react";
 import AddMovieForm from "../../forms/add-movie-form";
 import { Genre } from "../../../domain/entities/genre";
+import AddMovieFormByStep from "../../forms/add-movie/add-movie-form-by-step";
 
 interface AddMovieDrawerProps {
   open: boolean;
@@ -30,7 +31,7 @@ export default function AddMovieDrawer({
           </Button>
         </DrawerHeader>
         <div className="px-6 flex-1 overflow-y-auto">
-          <AddMovieForm handleSubmit={() => console.log('ok')} onCreateGenre={onCreateGenre} genres={genreDataOptions}/>
+          <AddMovieFormByStep onSubmit={() => console.log('ok')} onCreateGenre={onCreateGenre} genres={genreDataOptions}/>
         </div>
         <DrawerFooter className="flex-row justify-end gap-4 items-end">
           <Button variant="secondary" asChild>
