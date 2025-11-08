@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser';
 import { DomainExceptionFilter } from './shared/exceptions/filter/domainException.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+const frontendClient = process.env.CLIENT_URL;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({
@@ -15,7 +17,7 @@ async function bootstrap() {
   app.useGlobalFilters(new DomainExceptionFilter())
 
   app.enableCors({
-    origin: ['http://localhost:5173'],
+    origin: [frontendClient],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });

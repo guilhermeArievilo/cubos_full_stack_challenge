@@ -1,0 +1,16 @@
+services:
+  nextjs:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "4010:3000"
+    volumes:
+      - ./:/home/app:cached
+    tty: true
+    command: sleep infinity
+    networks:
+      - network
+
+networks:
+  network:

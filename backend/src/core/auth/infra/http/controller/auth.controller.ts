@@ -26,7 +26,8 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      path: '/auth'
+      path: '/auth',
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
     return res.json({ accessToken: tokens.accessToken });
@@ -43,7 +44,8 @@ export class AuthController {
       httpOnly: true,
       secure: true,
       sameSite: 'strict',
-      path: '/auth'
+      path: '/auth',
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
     return res.json({ accessToken: tokens.accessToken });
