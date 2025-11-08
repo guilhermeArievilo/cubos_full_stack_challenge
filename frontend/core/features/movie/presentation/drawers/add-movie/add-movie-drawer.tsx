@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { X } from "lucide-react";
+import AddMovieForm from "../../forms/add-movie-form";
 
 interface AddMovieDrawerProps {
   open: boolean;
@@ -21,7 +22,9 @@ export default function AddMovieDrawer({ open = false, onOpenChange }: AddMovieD
             </DrawerClose>
           </Button>
         </DrawerHeader>
-        <div>Teste</div>
+        <div className="px-6">
+          <AddMovieForm handleSubmit={() => console.log('ok')}/>
+        </div>
         <DrawerFooter className="flex-1 flex-row justify-end gap-4 items-end">
           <Button variant="secondary" asChild>
             <DrawerClose>
