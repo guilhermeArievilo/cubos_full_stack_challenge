@@ -25,9 +25,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.replace('/');
+      try {
+        setStatus('authenticating');
+        authModule.refreshUseCase.execute()
+        setStatus('authenticated');
+      } catch {
+        setStatus('unauthenticated');
+        router.replace('/');
+      }
     } else {
-      setAuth(true);
+      setStatus('unauthenticated');
     }
   }, [router]);
 
