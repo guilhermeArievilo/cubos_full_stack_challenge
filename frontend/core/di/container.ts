@@ -5,19 +5,32 @@ import LogoutUseCase from '../features/auth/domain/use-cases/logoutUseCase';
 import RefreshUseCase from '../features/auth/domain/use-cases/refreshUseCase';
 import RegisterUseCase from '../features/auth/domain/use-cases/registerUseCase';
 import { useAuthStore } from '../features/auth/data/datasource/authStoreDatasource';
+import MovieDataRepositoryImpl from '../features/movie/data/repository/movieDataRepositoryImpl';
+import MovieRemoteDatasource from '../features/movie/data/datasource/movieRemoteDatasource';
+import GenreRemoteDatasource from '../features/movie/data/datasource/genreRemoteDatasource';
+import AddMovieUseCase from '../features/movie/domain/use-cases/addMovieUseCase';
+import CreateGenreUseCase from '../features/movie/domain/use-cases/createGenreUseCase';
+import DeleteMovieUseCase from '../features/movie/domain/use-cases/deleteMovieUseCase';
+import GetMovieBySlugUseCase from '../features/movie/domain/use-cases/getMovieBySlugUseCase';
+import ListGenresUseCase from '../features/movie/domain/use-cases/listGenresUseCase';
+import ListMoviesUseCase from '../features/movie/domain/use-cases/listMoviesUseCase';
+import UpdateMovieUseCase from '../features/movie/domain/use-cases/updateMovieUseCase';
 
 
 export default function useContainer() {
   const authStore = useAuthStore()
   const authRemoteDatasource = new AuthRemoteDatasource();
 
-  const authRepository = new AuthRepositoryImpl(authRemoteDatasource, authStore);
+  const movieRemoteDatasource = new MovieRemoteDatasource();
+  const genreRemoteDatasource = new GenreRemoteDatasource();
 
+  const authRepository = new AuthRepositoryImpl(authRemoteDatasource, authStore);
+  
   const loginUseCase = new LoginUseCase(authRepository);
   const logoutUseCase = new LogoutUseCase(authRepository);
   const refreshUseCase = new RefreshUseCase(authRepository);
   const registerUseCase = new RegisterUseCase(authRepository);
-
+  
   const authModule = {
     loginUseCase,
     logoutUseCase,
@@ -25,7 +38,28 @@ export default function useContainer() {
     registerUseCase
   }
 
+  const movieRepository = new MovieDataRepositoryImpl(movieRemoteDatasource, genreRemoteDatasource);
+
+  const addMovie = new AddMovieUseCase(movieRepository);
+  const createGenre = new CreateGenreUseCase(movieRepository);
+  const deleteMovie = new DeleteMovieUseCase(movieRepository);
+  const getMovieBySlug = new GetMovieBySlugUseCase(movieRepository);
+  const listGenres = new ListGenresUseCase(movieRepository);
+  const listMovies = new ListMoviesUseCase(movieRepository);
+  const updateMovie = new UpdateMovieUseCase(movieRepository);
+
+  const movieModule = {
+    addMovie,
+    createGenre,
+    deleteMovie,
+    getMovieBySlug,
+    listGenres,
+    listMovies,
+    updateMovie
+  }
+
   return {
-    authModule
+    authModule,
+    movieModule
   }
 }

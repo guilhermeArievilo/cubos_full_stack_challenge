@@ -1,8 +1,8 @@
-import { ApiError } from '@/exceptions/dto/remoteHttpApiError'
-import InvalidCredentialsError from '@/exceptions/errors/invalidCredentials'
-import RequiredFieldError from '@/exceptions/errors/requiredFieldError'
-import ResourceAlreadyExist from '@/exceptions/errors/resourceAlreadyExist'
-import ResourceNotFound from '@/exceptions/errors/resourceNotFound'
+import { ApiError } from '@/core/exceptions/dto/remoteHttpApiError'
+import InvalidCredentialsError from '@/core/exceptions/errors/invalidCredentials'
+import RequiredFieldError from '@/core/exceptions/errors/requiredFieldError'
+import ResourceAlreadyExist from '@/core/exceptions/errors/resourceAlreadyExist'
+import ResourceNotFound from '@/core/exceptions/errors/resourceNotFound'
 import { AxiosError } from 'axios'
 
 export function httpErrorHandler(error: any) {

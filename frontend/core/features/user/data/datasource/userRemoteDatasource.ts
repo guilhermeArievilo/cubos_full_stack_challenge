@@ -1,6 +1,6 @@
 import type { Axios } from 'axios'
 import type { User } from '../../domain/entity/user'
-import type { RegisterDTO } from '@/features/auth/domain/entities/authEntities'
+import { RegisterDTO } from '@/core/features/auth/domain/entities/authEntities'
 
 export default class UserRemoteDatasource {
   constructor(private apiClient: Axios) {}
