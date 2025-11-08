@@ -6,7 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import MultipleSelector from "@/components/ui/multiselect";
+import MultipleSelector, { Option } from "@/components/ui/multiselect";
+import { Genre } from "../../domain/entities/genre";
+import { Button } from "@/components/ui/button";
 
 const genreId = z.string();
 
@@ -64,15 +66,28 @@ type FormSchemaType = z.infer<typeof formSchema>
 
 interface SearchFormProps {
   handleSubmit: (values: MovieProps) => void;
+  onCreateGenre: () => void
+  genres?: Genre[];
 }
 
-export default function AddMovieForm({ handleSubmit }: SearchFormProps) {
+export default function AddMovieForm({ handleSubmit, onCreateGenre, genres }: SearchFormProps) {
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema)
   });
   
   function onSubmit(data: FormSchemaType) {
 
+  }
+
+  function genreToOption(): Option[] {
+    if (!genres?.length) {
+      return [];
+    }
+
+    return genres.map(genre => ({
+      value: genre.id,
+      label: genre.name
+    }))
   }
 
   return (
@@ -147,27 +162,32 @@ export default function AddMovieForm({ handleSubmit }: SearchFormProps) {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="genres"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>Gêneros</FormLabel>
-              <FormControl>
-                <MultipleSelector
-                  placeholder="Selecione os gêneros do filme"
-                  commandProps={{
-                    label: "Select frameworks",
-                  }}
-                  hideClearAllButton
-                  hidePlaceholderWhenSelected
-                  emptyIndicator={<p className="text-center text-sm">Ainda não há gêneros adicionados, adicione o primeiro!</p>}
-                />
-              </FormControl>
-              <FormMessage/>
-            </FormItem>
-          )}
-        />
+        <div className="col-span-2 flex flex-col gap-4">
+          <FormField
+            control={form.control}
+            name="genres"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Gêneros</FormLabel>
+                <FormControl>
+                  <MultipleSelector
+                    placeholder="Selecione os gêneros do filme"
+                    commandProps={{
+                      label: "Select frameworks",
+                    }}
+                    defaultOptions={genreToOption()}
+                    hideClearAllButton
+                    hidePlaceholderWhenSelected
+                    emptyIndicator={<p className="text-center text-sm">Ainda não há gêneros adicionados, adicione o primeiro!</p>}
+                  />
+                </FormControl>
+                <FormMessage/>
+              </FormItem>
+            )}
+          />
+
+          <Button variant={"secondary"} type="button" onClick={onCreateGenre}>Adicionar Gênero</Button>
+        </div>
       </form>
     </Form>
   )

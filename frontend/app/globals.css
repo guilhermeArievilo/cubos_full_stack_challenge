@@ -28,7 +28,7 @@
   --color-border: var(--outline-variant);
   --color-destructive: var(--error);
   --color-accent-foreground: var(--primary);
-  --color-accent: var(--primary-container);
+  --color-accent: var(--surface-container);
   --color-muted-foreground: var(--on-surface-variant);
   --color-muted: var(--surface-dim);
   --color-secondary-foreground: var(--on-secondary);
