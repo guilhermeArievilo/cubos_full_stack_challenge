@@ -15,6 +15,8 @@ import GetMovieBySlugUseCase from '../features/movie/domain/use-cases/getMovieBy
 import ListGenresUseCase from '../features/movie/domain/use-cases/listGenresUseCase';
 import ListMoviesUseCase from '../features/movie/domain/use-cases/listMoviesUseCase';
 import UpdateMovieUseCase from '../features/movie/domain/use-cases/updateMovieUseCase';
+import ListLanguagesUseCase from '../features/movie/domain/use-cases/listLanguagesUseCase';
+import LanguageRemoteDatasource from '../features/movie/data/datasource/languageRemoteDatasource';
 
 
 export default function useContainer() {
@@ -23,6 +25,7 @@ export default function useContainer() {
 
   const movieRemoteDatasource = new MovieRemoteDatasource();
   const genreRemoteDatasource = new GenreRemoteDatasource();
+  const languageRemoteDatasource = new LanguageRemoteDatasource();
 
   const authRepository = new AuthRepositoryImpl(authRemoteDatasource, authStore);
   
@@ -38,7 +41,11 @@ export default function useContainer() {
     registerUseCase
   }
 
-  const movieRepository = new MovieDataRepositoryImpl(movieRemoteDatasource, genreRemoteDatasource);
+  const movieRepository = new MovieDataRepositoryImpl(
+    movieRemoteDatasource,
+    genreRemoteDatasource,
+    languageRemoteDatasource
+  );
 
   const addMovie = new AddMovieUseCase(movieRepository);
   const createGenre = new CreateGenreUseCase(movieRepository);
@@ -46,6 +53,7 @@ export default function useContainer() {
   const getMovieBySlug = new GetMovieBySlugUseCase(movieRepository);
   const listGenres = new ListGenresUseCase(movieRepository);
   const listMovies = new ListMoviesUseCase(movieRepository);
+  const listLanguages = new ListLanguagesUseCase(movieRepository);
   const updateMovie = new UpdateMovieUseCase(movieRepository);
 
   const movieModule = {
@@ -55,6 +63,7 @@ export default function useContainer() {
     getMovieBySlug,
     listGenres,
     listMovies,
+    listLanguages,
     updateMovie
   }
 

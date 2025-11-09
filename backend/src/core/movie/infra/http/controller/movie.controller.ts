@@ -30,7 +30,7 @@ export class MovieController {
     private listMoviesUseCase: ListMoviesUseCase,
     private updateMovieUseCase: UpdateMovieUseCase,
     private deleteMovieUseCase: DeleteMovieUseCase,
-    private findUserByEmailUseCase: FindUserByEmailUseCase,
+    private findUserByEmailUseCase: FindUserByEmailUseCase
   ) {}
 
   @ApiOperation({ summary: 'Cadastrar um novo filme' })

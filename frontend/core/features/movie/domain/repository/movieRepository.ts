@@ -1,4 +1,5 @@
 import { Genre, GenreProps } from "../entities/genre";
+import { Language } from "../entities/language";
 import { Movie, MovieCard, MovieProps } from "../entities/movie";
 
 export type ListDataRequestDto<T> = {
@@ -34,4 +35,5 @@ export default abstract class MovieRepository {
   abstract addGenre(name: string): Promise<Genre>
   abstract findGenreBySlug(slug: string): Promise<Genre>
   abstract listGenres(): Promise<Genre[]>
+  abstract listLanguages(): Promise<Language[]>
 }

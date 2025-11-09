@@ -1,14 +1,21 @@
 import { Genre } from "../../domain/entities/genre";
+import { Language } from "../../domain/entities/language";
 import { MovieCard, Movie, MovieProps } from "../../domain/entities/movie";
 import MovieRepository, { ListMoviesParamsRequestDto, PaginatedDataResponseDto } from "../../domain/repository/movieRepository";
 import GenreRemoteDatasource from "../datasource/genreRemoteDatasource";
+import LanguageRemoteDatasource from "../datasource/languageRemoteDatasource";
 import MovieRemoteDatasource from "../datasource/movieRemoteDatasource";
 
 export default class MovieDataRepositoryImpl implements MovieRepository {
   constructor(
     private movieRemoteDatasource: MovieRemoteDatasource,
-    private genreRemoteDatasource: GenreRemoteDatasource
+    private genreRemoteDatasource: GenreRemoteDatasource,
+    private languageRemoteDatasource: LanguageRemoteDatasource
   ) {}
+
+  async listLanguages(): Promise<Language[]> {
+    return await this.languageRemoteDatasource.listLanguages();
+  }
 
   async listMovies(params: ListMoviesParamsRequestDto): Promise<PaginatedDataResponseDto<MovieCard>> {
     return await this.movieRemoteDatasource.listMovies(params);

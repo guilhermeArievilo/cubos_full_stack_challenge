@@ -6,6 +6,7 @@ import MultipleSelector, { Option } from "@/components/ui/multiselect";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Genre } from "@/core/features/movie/domain/entities/genre";
+import { Language } from "@/core/features/movie/domain/entities/language";
 import { movieStatus, MovieStatus } from "@/core/features/movie/domain/entities/movieStatus";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
@@ -36,11 +37,14 @@ const formSchema = z.object({
     .min(1, 'Selecione ou adicione pelo menos um gênero ao filme.')
     .refine((ids) => new Set(ids).size === ids.length, { message: 'Gêneros duplicados não são permitidos' }),
   duration: z
-    .number("A duração do filme deve ser um número.")
-    .positive('A duração do filme deve ser um valor positivo.'),
+    .string()
+    .min(1, "Informe a duração do filme")
+    .regex(/^\d{2}:\d{2}(:\d{2})?$/, "Formato inválido (use HH:MM ou HH:MM:SS)."),
   status: MovieStatusSchema,
   originalLanguage: z.string().min(1, 'Selecione uma linguagem'),
-  releaseDate: z.date()
+  releaseDate: z
+    .string()
+    .min(1, "Informe a data de lançamento.")
 })
 
 export type GeralFormSchemaType = z.infer<typeof formSchema>
@@ -49,6 +53,8 @@ interface GeralStepFormProps {
   values?: GeralFormSchemaType;
   onFormReady?: (method: UseFormReturn<GeralFormSchemaType>) => void;
   genres?: Genre[];
+  createdGenres?: Genre[];
+  languages?: Language[];
   onCreateGenre: () => void
 }
 
@@ -56,6 +62,8 @@ export default function GeralStepForm({
   values,
   onFormReady,
   genres,
+  createdGenres,
+  languages,
   onCreateGenre
 }: GeralStepFormProps) {
   const form = useForm<GeralFormSchemaType>({
@@ -64,7 +72,12 @@ export default function GeralStepForm({
       title: "",
       originalTitle: "",
       tagline: "",
-      synopsis: ""
+      synopsis: "",
+      duration: "",
+      genres: [],
+      status: "",
+      originalLanguage: "",
+      releaseDate: ""
     },
   });
   
@@ -79,6 +92,18 @@ export default function GeralStepForm({
     }))
   }
 
+  function selectOption(value: string[]): Option[] | undefined {
+    return genreToOption().filter(currOption => {
+      return value.find(currValue => currOption.value === currValue);
+    })
+  }
+
+  useEffect(() => {
+    if (createdGenres?.length) {
+      form.setValue('genres', [...form.getValues('genres'), ...createdGenres.map(genre => genre.id)])
+    }
+  }, [createdGenres])
+
   useEffect(() => {
     if (onFormReady) {
       onFormReady(form);
@@ -88,6 +113,8 @@ export default function GeralStepForm({
   return (
     <Form {...form}>
       <form className="grid grid-cols-2 gap-4">
+        <span className="col-span-2 text-xl font-semibold">Dados gerais do filme</span>
+        
         <FormField
           control={form.control}
           name="title"
@@ -166,10 +193,10 @@ export default function GeralStepForm({
                 <FormLabel>Gêneros</FormLabel>
                 <FormControl>
                   <MultipleSelector
+                    { ...field }
                     placeholder="Selecione os gêneros do filme"
-                    commandProps={{
-                      label: "Select frameworks",
-                    }}
+                    value={selectOption(field.value)}
+                    onChange={(currOptions) => field.onChange(currOptions.map((value) => value.value))}
                     defaultOptions={genreToOption()}
                     hideClearAllButton
                     hidePlaceholderWhenSelected
@@ -192,7 +219,9 @@ export default function GeralStepForm({
               <FormLabel>Duração</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                  type="time"
+                  step={1}
                   placeholder="Duração do filmes em minutos"
                   {...field}
                 />
@@ -206,19 +235,21 @@ export default function GeralStepForm({
           control={form.control}
           name="status"
           render={({ field }) => (
-            <FormItem className="col-span-1">
+            <FormItem className="col-span-1 flex flex-col">
               <FormLabel>Situação</FormLabel>
               <FormControl>
-                <Select { ...field }>
-                  <SelectTrigger className="w-full h-10!">
+                <Select
+                  {...field}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Selecione a situação" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Situações</SelectLabel>
                       {
                         movieStatus.map(({ value, label }) => (
-                          <SelectItem value={value}>{label}</SelectItem>
+                          <SelectItem value={value} key={value}>{label}</SelectItem>
                         ))
                       }
                     </SelectGroup>
@@ -234,13 +265,26 @@ export default function GeralStepForm({
           control={form.control}
           name="originalLanguage"
           render={({ field }) => (
-            <FormItem className="col-span-1">
+            <FormItem className="col-span-1 flex flex-col">
               <FormLabel>Linguagem original</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Linguagem original"
+                <Select
                   {...field}
-                />
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-full h-10!">
+                    <SelectValue placeholder="Selecione a linguagem" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {
+                        languages?.map(({ value, label }) => (
+                          <SelectItem value={value} key={value}>{label}</SelectItem>
+                        ))
+                      }
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage/>
             </FormItem>
@@ -249,7 +293,7 @@ export default function GeralStepForm({
 
         <FormField
           control={form.control}
-          name="originalLanguage"
+          name="releaseDate"
           render={({ field }) => (
             <FormItem className="col-span-1">
               <FormLabel>Data de lançamento</FormLabel>

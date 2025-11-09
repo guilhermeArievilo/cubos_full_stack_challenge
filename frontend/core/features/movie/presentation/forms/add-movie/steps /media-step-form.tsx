@@ -33,6 +33,8 @@ export default function MediaStepForm({ values, onFormReady }: MediaStepFormProp
   return (
     <Form {...form}>
       <form className="grid grid-cols-2 gap-4">
+        <span className="col-span-2 text-xl font-semibold">Insira as mídias do filme</span>
+        
         <FormField
           control={form.control}
           name="backdropPath"

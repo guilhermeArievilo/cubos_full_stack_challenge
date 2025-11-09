@@ -7,6 +7,7 @@ import AddMovieDrawer from "@/core/features/movie/presentation/drawers/add-movie
 import { useEffect, useState } from "react";
 import { Genre } from "@/core/features/movie/domain/entities/genre";
 import useContainer from "@/core/di/container";
+import { Language } from "@/core/features/movie/domain/entities/language";
 
 export default function HomePage() {
   const [triggerAddMovieDrawer, setTriggerAddMovieDrawer] = useState<boolean>(false)
@@ -16,9 +17,12 @@ export default function HomePage() {
   const { movieModule } = useContainer()
 
   const [genres, setGenres] = useState<Genre[]>([])
+  const [atualCreatedGenre, setCreatedGenre] = useState<Genre | null>(null)
+  const [languages, setLanguages] = useState<Language[]>([])
 
   async function createGenre(name: string) {
-    await movieModule.createGenre.execute(name);
+    const genre = await movieModule.createGenre.execute(name);
+    setCreatedGenre(genre);
     setTriggerAddGenrePopover(false);
     await fetchGenres();
   }
@@ -28,8 +32,14 @@ export default function HomePage() {
     setGenres(data);
   }
 
+  async function fetchLanguages() {
+    const data = await movieModule.listLanguages.execute();
+    setLanguages(data);
+  }
+
   useEffect(() => {
     fetchGenres();
+    fetchLanguages();
   }, [])
   return (
     <main className="grow flex flex-col">
@@ -48,6 +58,9 @@ export default function HomePage() {
         onOpenChange={setTriggerAddMovieDrawer}
         onCreateGenre={() => setTriggerAddGenrePopover(true)}
         genreDataOptions={genres}
+        createdGenres={atualCreatedGenre ? [atualCreatedGenre] : []}
+        languageDataOptions={languages}
+        onClose={() => setCreatedGenre(null)}
       />
       <AddMovieFilterDialog open={triggerAddMovieFliterDialog} onOpenChange={setTriggerAddMovieFliterDialog}/>
       <AddGenreDialog

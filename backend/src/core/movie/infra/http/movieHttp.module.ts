@@ -11,6 +11,8 @@ import { UserDatabaseModule } from "@/core/user/infra/db/userDatabase.module";
 import { GenreController } from "./controller/genre.controller";
 import ListGenresUseCase from "../../domain/application/use-cases/listGenresUseCase";
 import CreateGenreUseCase from "../../domain/application/use-cases/createGenreUseCase";
+import ListLanguagesUseCase from "../../domain/application/use-cases/listLanguagesUseCase";
+import { LanguageController } from "./controller/language.controller";
 
 @Module({
   imports: [
@@ -19,7 +21,8 @@ import CreateGenreUseCase from "../../domain/application/use-cases/createGenreUs
   ],
   controllers: [
     MovieController,
-    GenreController
+    GenreController,
+    LanguageController
   ],
   providers: [
     AddMovieUseCase,
@@ -29,7 +32,8 @@ import CreateGenreUseCase from "../../domain/application/use-cases/createGenreUs
     DeleteMovieUseCase,
     FindUserByEmailUseCase,
     ListGenresUseCase,
-    CreateGenreUseCase
+    CreateGenreUseCase,
+    ListLanguagesUseCase
   ],
 })
 export class MovieHttpModule {}

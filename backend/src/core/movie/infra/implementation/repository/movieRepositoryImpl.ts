@@ -7,11 +7,17 @@ import { Prisma } from "@prisma/client";
 import MoviePrismaMapper from "../datasource/db/prisma/mapper/moviePrismaMapper";
 import MovieStatusPrismaMapper from "../datasource/db/prisma/mapper/movieStatusPrismaMapper";
 import MovieGenrePrismaMapper from "../datasource/db/prisma/mapper/movieGenrePrismaMapper";
+import { Language } from "@/core/movie/domain/entities/language";
+import { movieLanguages } from "../datasource/in-memory/languages";
 @Injectable()
 export default class MovieRepositoryImpl implements MovieRepository {
   constructor(
     private prismaService: PrismaService
   ) {}
+
+  listLanguages(): Language[] {
+    return movieLanguages;
+  }
 
   async listMovies(params: ListMoviesParamsRequestDto): Promise<PaginatedDataResponseDto<Movie>> {
     const { page = 1, limit = 10, orderBy = 'title', order = 'asc', query, genre, releaseDate, duration} = params;
