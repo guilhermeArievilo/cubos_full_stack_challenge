@@ -46,21 +46,22 @@ const steps = [
   },
 ]
 
+export type MovieWizardData = 
+  GeralFormSchemaType &
+  MediaFormSchemaType &
+  PopularityFormSchemaType &
+  FinancialFormSchemaType;
+
 interface AddMovieFormWizardProviderProps {
   children: ReactNode,
   resetTrigger?: boolean,
-  onSubmit:(data:
-    GeralFormSchemaType &
-    MediaFormSchemaType &
-    PopularityFormSchemaType &
-    FinancialFormSchemaType
-  ) => void 
+  onSubmit?: (data: MovieWizardData) => void 
 }
 
 export function AddMovieFormWizardProvider({ children, onSubmit, resetTrigger }: AddMovieFormWizardProviderProps) {
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [formMethods, setFormMethods] = useState<UseFormReturn<GeralFormSchemaType> | UseFormReturn<MediaFormSchemaType> | UseFormReturn<PopularityFormSchemaType> | UseFormReturn<FinancialFormSchemaType> | null>(null)
-  const [fullData, setFullData] = useState<(GeralFormSchemaType & MediaFormSchemaType & PopularityFormSchemaType & FinancialFormSchemaType) | undefined>(undefined);
+  const [fullData, setFullData] = useState<MovieWizardData | undefined>(undefined);
 
   const [disableAfterSubmit, setDisableAfterSubmit] = useState(false);
   
@@ -70,7 +71,7 @@ export function AddMovieFormWizardProvider({ children, onSubmit, resetTrigger }:
     }
   }
 
-  function nextStep(data: GeralFormSchemaType | MediaFormSchemaType | PopularityFormSchemaType | FinancialFormSchemaType) {
+  async function nextStep(data: GeralFormSchemaType | MediaFormSchemaType | PopularityFormSchemaType | FinancialFormSchemaType) {
     setCurrentStep(currentStep + 1);
     setFullData({
       ...fullData!,
@@ -78,7 +79,9 @@ export function AddMovieFormWizardProvider({ children, onSubmit, resetTrigger }:
     })
 
     if (currentStep === steps.length) {
-      onSubmit({...fullData!, ...data})
+      if (onSubmit !== undefined) {
+        onSubmit({...fullData!, ...data})
+      }
       setDisableAfterSubmit(true)
     }
   }

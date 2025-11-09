@@ -1,4 +1,4 @@
-import { Injectable, Move } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import MovieRepository from "../repository/movieRepository";
 import Movie, { MovieProps } from "../../entities/movie";
 import UserRepository from "@/core/user/domain/application/repository/userRepository";

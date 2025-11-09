@@ -1,6 +1,7 @@
 import { MovieStatus } from "@/core/movie/domain/entities/movieStatus";
 import { IsInt, IsOptional, IsPositive, IsString } from "class-validator";
 import { GenreHttpDto } from "./genreHttpDto";
+import { Rating } from "@/core/movie/domain/entities/rating";
 
 export default class UpdateMovieBodyDTO {
   @IsOptional()
@@ -31,8 +32,8 @@ export default class UpdateMovieBodyDTO {
   posterPath: string;
   
   @IsOptional()
-  @IsPositive()
-  rating: number;
+  @IsString()
+  rating: Rating;
   
   @IsOptional()
   @IsPositive()

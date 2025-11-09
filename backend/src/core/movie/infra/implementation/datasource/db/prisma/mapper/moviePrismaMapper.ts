@@ -3,6 +3,7 @@ import Genre from '@/core/movie/domain/entities/genre';
 import { Prisma, Movie as RawMovie, Genre as RawGenre, $Enums, MovieStatus } from '@prisma/client';
 import MovieStatusPrismaMapper from './movieStatusPrismaMapper';
 import MovieGenrePrismaMapper from './movieGenrePrismaMapper';
+import RatingPrismaMapper from './ratingPrismaMapper';
 
 type RawMovieWithGenres = RawMovie & {
   genres: RawGenre[];
@@ -10,6 +11,21 @@ type RawMovieWithGenres = RawMovie & {
 
 export default class MoviePrismaMapper {
   static toPrisma(movie: Movie): Prisma.MovieUncheckedCreateInput {
+    console.log(movie)
+    const genresRefs = movie.genres.map((currGenre) => {
+      if (typeof currGenre === 'string') {
+        return {
+          id: currGenre
+        }
+      }
+
+      return {
+        id: currGenre.id
+      }
+    });
+
+    console.log(genresRefs)
+
     return {
       id: movie.id,
       title: movie.title,
@@ -19,7 +35,7 @@ export default class MoviePrismaMapper {
       slug: movie.slug,
       backdropPath: movie.backdropPath,
       posterPath: movie.posterPath,
-      rating: movie.rating,
+      rating: RatingPrismaMapper.toPrismaRating(movie.rating),
       voteCount: movie.voteCount,
       voteAverage: movie.voteAverage,
       duration: movie.duration,
@@ -33,7 +49,7 @@ export default class MoviePrismaMapper {
       createdAt: movie.createdAt,
       updatedAt: movie.updatedAt,
       genres: {
-        connect: movie.genres.map(g => ({ id: g.id! }))
+        connect: genresRefs
       }
     };
   }
@@ -50,7 +66,7 @@ export default class MoviePrismaMapper {
       genres,
       backdropPath: raw.backdropPath,
       posterPath: raw.posterPath,
-      rating: raw.rating,
+      rating: RatingPrismaMapper.fromPrismaRating(raw.rating),
       voteCount: raw.voteCount,
       voteAverage: Number(raw.voteAverage),
       duration: raw.duration,

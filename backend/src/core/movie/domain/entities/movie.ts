@@ -4,16 +4,17 @@ import User from "@/core/user/domain/entity/user";
 import createSlug from "@/shared/helpers/slugify";
 import generateId from "@/shared/helpers/generateUUID";
 import Genre from "./genre";
+import { Rating } from "./rating";
 
 export type MovieProps = {
   title: string;
   originalTitle: string;
   tagline: string;
   synopsis: string;
-  genres: Genre[];
+  genres: Genre[] | string[];
   backdropPath: string;
   posterPath: string;
-  rating: number;
+  rating: Rating;
   voteCount: number;
   voteAverage: number;
   duration: number;
@@ -41,7 +42,7 @@ export default class Movie {
   ) {
     this.props = {
       ...props,
-      slug: this.props.slug ?? createSlug(props.title),
+      slug: this.props?.slug ?? createSlug(props.title),
       createdById,
       createdAt: props.createdAt ?? new Date(),
       updatedAt: props.updatedAt ?? new Date(),
@@ -86,11 +87,11 @@ export default class Movie {
     this.props.synopsis = synopsis;
   }
 
-  public get genres(): Genre[] {
+  public get genres(): Genre[] | string[] {
     return this.props.genres;
   }
 
-  public set genres(genres: Genre[]) {
+  public set genres(genres: Genre[] | string[]) {
     this.props.genres = genres;
   }
 
@@ -110,11 +111,11 @@ export default class Movie {
     this.props.posterPath = posterPath;
   }
 
-  public get rating(): number {
+  public get rating(): Rating {
     return this.props.rating;
   }
 
-  public set rating(rating: number) {
+  public set rating(rating: Rating) {
     this.props.rating = rating;
   }
 

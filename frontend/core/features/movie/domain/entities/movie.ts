@@ -1,15 +1,16 @@
 import { Genre } from "./genre";
 import { MovieStatus } from "./movieStatus";
+import { Rating } from "./rating";
 
 export type MovieProps = {
   title: string;
   originalTitle: string;
   tagline: string;
   synopsis: string;
-  genres: Genre[];
+  genres: Genre[] | string[];
   backdropPath: string;
   posterPath: string;
-  rating: number;
+  rating: Rating;
   voteCount: number;
   voteAverage: number;
   duration: number;

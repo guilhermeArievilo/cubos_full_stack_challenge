@@ -21,6 +21,8 @@ import BucketRemoteUploadDatasource from '../features/upload/data/datasource/buc
 import UploadRemoteDatasource from '../features/upload/data/datasource/uploadRemoteDatasource';
 import UploadRepositoryImpl from '../features/upload/data/repository/uploadRepositoryImpl';
 import UploadUseCase from '../features/upload/domain/use-cases/uploadFileUseCase';
+import RatingRemoteDatasource from '../features/movie/data/datasource/ratingRemoteDatasource';
+import ListRatingsUseCase from '../features/movie/domain/use-cases/listRatingsUseCase';
 
 
 export default function useContainer() {
@@ -33,6 +35,7 @@ export default function useContainer() {
   const movieRemoteDatasource = new MovieRemoteDatasource();
   const genreRemoteDatasource = new GenreRemoteDatasource();
   const languageRemoteDatasource = new LanguageRemoteDatasource();
+  const ratingRemoteDatasource = new RatingRemoteDatasource();
 
   const uploadRepository = new UploadRepositoryImpl(
     bucketRemoteUploadDatasource,
@@ -62,7 +65,8 @@ export default function useContainer() {
   const movieRepository = new MovieDataRepositoryImpl(
     movieRemoteDatasource,
     genreRemoteDatasource,
-    languageRemoteDatasource
+    languageRemoteDatasource,
+    ratingRemoteDatasource
   );
 
   const addMovie = new AddMovieUseCase(movieRepository);
@@ -73,6 +77,7 @@ export default function useContainer() {
   const listMovies = new ListMoviesUseCase(movieRepository);
   const listLanguages = new ListLanguagesUseCase(movieRepository);
   const updateMovie = new UpdateMovieUseCase(movieRepository);
+  const listRatings = new ListRatingsUseCase(movieRepository);
 
   const movieModule = {
     addMovie,
@@ -82,6 +87,7 @@ export default function useContainer() {
     listGenres,
     listMovies,
     listLanguages,
+    listRatings,
     updateMovie
   }
 

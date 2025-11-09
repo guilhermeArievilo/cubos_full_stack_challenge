@@ -13,6 +13,8 @@ import ListGenresUseCase from "../../domain/application/use-cases/listGenresUseC
 import CreateGenreUseCase from "../../domain/application/use-cases/createGenreUseCase";
 import ListLanguagesUseCase from "../../domain/application/use-cases/listLanguagesUseCase";
 import { LanguageController } from "./controller/language.controller";
+import ListRatingsUseCase from "../../domain/application/use-cases/listRatingsUseCase";
+import { RatingController } from "./controller/rating.controller";
 
 @Module({
   imports: [
@@ -22,7 +24,8 @@ import { LanguageController } from "./controller/language.controller";
   controllers: [
     MovieController,
     GenreController,
-    LanguageController
+    LanguageController,
+    RatingController
   ],
   providers: [
     AddMovieUseCase,
@@ -33,7 +36,8 @@ import { LanguageController } from "./controller/language.controller";
     FindUserByEmailUseCase,
     ListGenresUseCase,
     CreateGenreUseCase,
-    ListLanguagesUseCase
+    ListLanguagesUseCase,
+    ListRatingsUseCase
   ],
 })
 export class MovieHttpModule {}

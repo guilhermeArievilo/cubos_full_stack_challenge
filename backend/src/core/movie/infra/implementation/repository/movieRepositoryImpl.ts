@@ -9,18 +9,24 @@ import MovieStatusPrismaMapper from "../datasource/db/prisma/mapper/movieStatusP
 import MovieGenrePrismaMapper from "../datasource/db/prisma/mapper/movieGenrePrismaMapper";
 import { Language } from "@/core/movie/domain/entities/language";
 import { movieLanguages } from "../datasource/in-memory/languages";
+import { RatingData } from "@/core/movie/domain/entities/rating";
+import { allRatingsData } from "../datasource/in-memory/ratingsInMemoryDatasource";
 @Injectable()
 export default class MovieRepositoryImpl implements MovieRepository {
   constructor(
     private prismaService: PrismaService
   ) {}
 
+  listRatings(): RatingData[] {
+    return allRatingsData;
+  }
+
   listLanguages(): Language[] {
     return movieLanguages;
   }
 
   async listMovies(params: ListMoviesParamsRequestDto): Promise<PaginatedDataResponseDto<Movie>> {
-    const { page = 1, limit = 10, orderBy = 'title', order = 'asc', query, genre, releaseDate, duration} = params;
+    const { page = 1, limit = 10, orderBy = 'title', order = 'asc', query, genre, releaseDate, duration} = params || {};
     
     const skip = (page - 1) * limit;
     const take = limit;
@@ -71,7 +77,15 @@ export default class MovieRepositoryImpl implements MovieRepository {
       where
     });
 
-
+    console.log({
+      where,
+      orderBy: {
+        [orderBy]: order
+      },
+      skip,
+      take,
+      include: { genres: true }
+    })
     const rawMovies = await this.prismaService.movie.findMany({
       where,
       orderBy: {
@@ -115,7 +129,9 @@ export default class MovieRepositoryImpl implements MovieRepository {
   }
 
   async addMovie(movie: Movie): Promise<void> {
+    console.log('repo', movie)
     const prismaRawMovie = MoviePrismaMapper.toPrisma(movie);
+
 
     await this.prismaService.movie.create({
       data: prismaRawMovie
@@ -133,7 +149,17 @@ export default class MovieRepositoryImpl implements MovieRepository {
         ...data,
         status: data.status ? MovieStatusPrismaMapper.toPrismaStatus(data.status) : undefined,
         genres: data.genres ? {
-          connect: data.genres.map(g => ({ id: g.id! }))
+          connect: data.genres.map(g => {
+            if (typeof g === 'string') {
+              return {
+                id: g
+              }
+            }
+
+            return {
+              id: g.id
+            }
+          })
         } : undefined
       }
     });

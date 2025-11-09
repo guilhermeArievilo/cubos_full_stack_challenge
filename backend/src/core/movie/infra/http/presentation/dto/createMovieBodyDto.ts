@@ -2,6 +2,7 @@ import { MovieStatus } from "@/core/movie/domain/entities/movieStatus";
 import { IsInt, IsNotEmpty, IsPositive, IsString } from "class-validator";
 import { GenreHttpDto } from "./genreHttpDto";
 import { ApiProperty } from "@nestjs/swagger";
+import { Rating } from "@/core/movie/domain/entities/rating";
 
 export default class CreateMovieBodyDTO {
   @ApiProperty({ example: 'Bumblebee', description: 'Título do filme' })
@@ -26,7 +27,7 @@ export default class CreateMovieBodyDTO {
 
   @ApiProperty({ description: 'Gêneros do filme.' })
   @IsNotEmpty()
-  genres: GenreHttpDto[];
+  genres: string[];
 
   @ApiProperty({ description: 'Imagem de background do filme.' })
   @IsNotEmpty()
@@ -38,10 +39,9 @@ export default class CreateMovieBodyDTO {
   @IsString()
   posterPath: string;
   
-  @ApiProperty({ description: 'Classificação.' })
+  @ApiProperty({ description: 'Classificação indicativa.' })
   @IsNotEmpty()
-  @IsPositive()
-  rating: number;
+  rating: Rating;
   
   @ApiProperty({ description: 'Quantidade de votos' })
   @IsNotEmpty()

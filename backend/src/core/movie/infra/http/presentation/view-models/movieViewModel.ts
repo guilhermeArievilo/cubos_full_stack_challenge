@@ -2,6 +2,7 @@ import Movie from "@/core/movie/domain/entities/movie";
 import { MovieHttpDTO } from "../dto/movieHttpDto";
 import GenreViewModel from "./genreViewModel";
 import { PartialHttpMovieDTO } from "../dto/partialHttpMovieDto";
+import Genre from "@/core/movie/domain/entities/genre";
 
 export default class MovieViewModel {
   static toHttp(data: Movie): MovieHttpDTO {
@@ -33,7 +34,7 @@ export default class MovieViewModel {
       originalTitle,
       tagline,
       synopsis,
-      genres: data.genres.map(GenreViewModel.toHttp),
+      genres: typeof genres === 'string' ? [] : genres.map((genre) => GenreViewModel.toHttp(genre as Genre)),
       backdropPath,
       posterPath,
       rating,
@@ -61,7 +62,7 @@ export default class MovieViewModel {
     return {
       id,
       title,
-      genres: genres.map(GenreViewModel.toHttp),
+      genres: typeof genres === 'string' ? [] : genres.map((genre) => GenreViewModel.toHttp(genre as Genre)),
       posterPath,
       voteAverage,
       voteCount

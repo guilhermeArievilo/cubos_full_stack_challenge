@@ -31,7 +31,9 @@ export default function MediaStepForm({ values, onFormReady, onUploadFile }: Med
 
   const form = useForm<MediaFormSchemaType>({
     resolver: zodResolver(formSchema),
-    defaultValues: values
+    defaultValues: values || {
+      trailerLink: ""
+    }
   });
 
   async function handleDropBackdrop(files: File[]) {

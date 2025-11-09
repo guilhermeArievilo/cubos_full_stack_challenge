@@ -1,7 +1,6 @@
 import { JwtAuthGuard } from "@/shared/infra/jwt/jwt-auth.guard";
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
 import CreateMovieBodyDTO from "../presentation/dto/createMovieBodyDto";
-import { MovieHttpDTO } from "../presentation/dto/movieHttpDto";
 import AddMovieUseCase from "@/core/movie/domain/application/use-cases/addMovieUseCase";
 import { type AuthenticatedRequest } from "@/shared/infra/jwt/jwt.strategy";
 import { JwtPayload } from "@/core/auth/domain/entities/payload";
@@ -43,16 +42,13 @@ export class MovieController {
   ): Promise<void> {
     const { email } = req.user as JwtPayload;
 
-    await this.addMovieUseCase.execute({
-      ...movieData,
-      genres: movieData.genres.map(GenreViewModel.toDomain)
-    }, email)
+    await this.addMovieUseCase.execute(movieData, email)
 
     return;
   }
 
   @ApiOperation({ summary: 'Buscar um filme pelo seu slug' })
-  @Get('/:slug')
+  @Get('/by/:slug')
   async getMovieBySlug(@Param('slug') slug: string) {
     const domainMovie = await this.getMovieBySlugUseCase.execute(slug);
     return MovieViewModel.toHttp(domainMovie);
@@ -75,12 +71,12 @@ export class MovieController {
     } = query
 
     const domainMovies = await this.listMoviesUseCase.execute({
-      page: Number(page),
-      limit: Number(limit),
+      page: page ? Number(page) : undefined,
+      limit: limit ? Number(limit) : undefined,
       orderBy: orderBy as keyof MovieProps,
       order,
       query: titleQuery,
-      duration: Number(duration),
+      duration: duration ? Number(duration) : undefined,
       genre,
       releaseDate: startReleaseData && endReleaseData ? {
         start: new Date(startReleaseData),

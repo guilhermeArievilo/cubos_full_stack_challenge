@@ -8,9 +8,11 @@ import { Stepper, StepperIndicator, StepperItem, StepperTitle, StepperTrigger } 
 import { useAddMovieFormWizard } from "./add-movie-form-wizard-context";
 import { Language } from "@/core/features/movie/domain/entities/language";
 import { ContentType } from "@/core/features/upload/domain/entities/contentType";
+import { RatingData } from "@/core/features/movie/domain/entities/rating";
 
 interface AddMovieFormByStepProps {
   genres?: Genre[];
+  ratings?: RatingData[];
   createdGenres?: Genre[];
   languages?: Language[];
   onCreateGenre: () => void;
@@ -19,6 +21,7 @@ interface AddMovieFormByStepProps {
 
 export default function AddMovieFormStepper({
   genres,
+  ratings,
   languages,
   onCreateGenre,
   createdGenres,
@@ -52,6 +55,7 @@ export default function AddMovieFormStepper({
           onFormReady={setCurrentFormMethods}
           onCreateGenre={onCreateGenre}
           genres={genres}
+          ratings={ratings}
           createdGenres={createdGenres}
           languages={languages}
         />

@@ -52,7 +52,7 @@ model Movie {
   backdropPath     String
   posterPath       String
 
-  rating            Int
+  rating            Rating
   
   voteCount         Int     
   voteAverage       Decimal
@@ -96,4 +96,13 @@ enum MovieStatus {
   CANCELLED
   DELAYED
   ARCHIVED
+}
+
+enum Rating {
+  LIVRE
+  DEZ_ANOS
+  DOZE_ANOS
+  QUATORZE_ANOS
+  DEZESSEIS_ANOS
+  DEZOITO_ANOS
 }

@@ -1,7 +1,6 @@
 import api from "@/infra/http/axios/api";
 import { Movie, MovieCard, MovieProps } from "../../domain/entities/movie";
 import { ListMoviesParamsRequestDto, PaginatedDataResponseDto } from "../../domain/repository/movieRepository";
-import { Language } from "../../domain/entities/language";
 
 export default class MovieRemoteDatasource {
   public async addMovie(data: MovieProps): Promise<void> {

@@ -10,6 +10,12 @@ import useContainer from "@/core/di/container";
 import { Language } from "@/core/features/movie/domain/entities/language";
 import { ContentType } from "@/core/features/upload/domain/entities/contentType";
 import { toast } from "sonner";
+import { MovieCard, MovieProps } from "@/core/features/movie/domain/entities/movie";
+import { MovieWizardData } from "@/core/features/movie/presentation/forms/add-movie/wizard/add-movie-form-wizard-context";
+import { Rating, RatingData } from "@/core/features/movie/domain/entities/rating";
+import { timeStringToMinutes } from "@/lib/utils";
+import { MovieStatus } from "@/core/features/movie/domain/entities/movieStatus";
+import { PaginatedDataResponseDto } from "@/core/features/movie/domain/repository/movieRepository";
 
 export default function HomePage() {
   const [triggerAddMovieDrawer, setTriggerAddMovieDrawer] = useState<boolean>(false)
@@ -21,6 +27,9 @@ export default function HomePage() {
   const [genres, setGenres] = useState<Genre[]>([])
   const [atualCreatedGenre, setCreatedGenre] = useState<Genre | null>(null)
   const [languages, setLanguages] = useState<Language[]>([])
+  const [ratings, setRatings] = useState<RatingData[]>([])
+
+  const [moviePaginatedData, setMoviePaginatedData] = useState<PaginatedDataResponseDto<MovieCard> | null>(null)
 
   async function uploadFile(fileName: string, contentType: ContentType, file: File) {
     try {
@@ -34,11 +43,41 @@ export default function HomePage() {
     }
   }
 
+  async function createMovie(data: MovieWizardData): Promise<'success' | 'fail'> {
+    try {
+      toast.info("Cadastrando filme...");
+      await movieModule.addMovie.execute({
+        ...data,
+        rating: Rating[data.rating as keyof typeof Rating],
+        duration: timeStringToMinutes(data.duration),
+        status: MovieStatus[data.status as keyof typeof MovieStatus],
+        releaseDate: new Date(data.releaseDate)
+      });
+      toast.success(`${data.title} foi cadastrado.`)
+      setTriggerAddMovieDrawer(false);
+      return 'success';
+    } catch {
+      toast.error("Ops, algo deu errado aqui, tente de novo.");
+      return 'fail';
+    }
+  }
+
   async function createGenre(name: string) {
     const genre = await movieModule.createGenre.execute(name);
     setCreatedGenre(genre);
     setTriggerAddGenrePopover(false);
     await fetchGenres();
+  }
+
+  async function fetchMovies() {
+    const moviePaginatedDataRes = await movieModule.listMovies.execute({
+      limit: 10,
+      page: 1,
+      orderBy: 'title',
+      order: 'asc',
+    })
+
+    setMoviePaginatedData(moviePaginatedDataRes);
   }
 
   async function fetchGenres() {
@@ -51,9 +90,16 @@ export default function HomePage() {
     setLanguages(data);
   }
 
+  async function fetchRatings() {
+    const data = await movieModule.listRatings.execute();
+    setRatings(data);
+  }
+
   useEffect(() => {
+    fetchMovies();
     fetchGenres();
     fetchLanguages();
+    fetchRatings();
   }, [])
   return (
     <main className="grow flex flex-col">
@@ -72,7 +118,9 @@ export default function HomePage() {
         onOpenChange={setTriggerAddMovieDrawer}
         onCreateGenre={() => setTriggerAddGenrePopover(true)}
         onUploadFile={uploadFile}
+        onSubmitMovie={createMovie}
         genreDataOptions={genres}
+        ratingsDataOptions={ratings}
         createdGenres={atualCreatedGenre ? [atualCreatedGenre] : []}
         languageDataOptions={languages}
         onClose={() => setCreatedGenre(null)}

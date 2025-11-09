@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Genre } from "@/core/features/movie/domain/entities/genre";
 import { Language } from "@/core/features/movie/domain/entities/language";
 import { movieStatus, MovieStatus } from "@/core/features/movie/domain/entities/movieStatus";
+import { Rating, RatingData } from "@/core/features/movie/domain/entities/rating";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
@@ -26,6 +27,14 @@ export const MovieStatusSchema = z
     (val) => movieStatus.some((s) => s.value === val),
     { message: "Status inválido (fora da lista de status permitidos)" }
   );
+  
+export const RatingSchema = z
+  .string()
+  .refine(
+    (val): val is `${Rating}` =>
+      Object.values(Rating).includes(val as Rating),
+    { message: "Classificação indicativa inválida" }
+  )
 
 const formSchema = z.object({
   title: z.string().min(1, 'É necessário um título.'),
@@ -42,6 +51,7 @@ const formSchema = z.object({
     .regex(/^\d{2}:\d{2}(:\d{2})?$/, "Formato inválido (use HH:MM ou HH:MM:SS)."),
   status: MovieStatusSchema,
   originalLanguage: z.string().min(1, 'Selecione uma linguagem'),
+  rating: RatingSchema,
   releaseDate: z
     .string()
     .min(1, "Informe a data de lançamento.")
@@ -53,6 +63,7 @@ interface GeralStepFormProps {
   values?: GeralFormSchemaType;
   onFormReady?: (method: UseFormReturn<GeralFormSchemaType>) => void;
   genres?: Genre[];
+  ratings?: RatingData[];
   createdGenres?: Genre[];
   languages?: Language[];
   onCreateGenre: () => void
@@ -62,6 +73,7 @@ export default function GeralStepForm({
   values,
   onFormReady,
   genres,
+  ratings,
   createdGenres,
   languages,
   onCreateGenre
@@ -75,6 +87,7 @@ export default function GeralStepForm({
       synopsis: "",
       duration: "",
       genres: [],
+      rating: "",
       status: "",
       originalLanguage: "",
       releaseDate: ""
@@ -210,6 +223,36 @@ export default function GeralStepForm({
 
           <Button variant={"secondary"} type="button" onClick={onCreateGenre}>Adicionar Gênero</Button>
         </div>
+
+        <FormField
+          control={form.control}
+          name="rating"
+          render={({ field }) => (
+            <FormItem className="col-span-2 flex flex-col">
+              <FormLabel>Classificação indicativa</FormLabel>
+              <FormControl>
+                <Select
+                  {...field}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione a classificação indicativa" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {
+                        ratings?.map(({ value, label }) => (
+                          <SelectItem value={value} key={value}>{label}</SelectItem>
+                        ))
+                      }
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage/>
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}

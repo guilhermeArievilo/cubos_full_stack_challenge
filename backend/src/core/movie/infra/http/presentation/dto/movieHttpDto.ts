@@ -1,5 +1,6 @@
 import { MovieStatus } from "@/core/movie/domain/entities/movieStatus";
 import { GenreHttpDto } from "./genreHttpDto";
+import { Rating } from "@/core/movie/domain/entities/rating";
 
 export class MovieHttpDTO {
   id: string;
@@ -10,7 +11,7 @@ export class MovieHttpDTO {
   genres: GenreHttpDto[];
   backdropPath: string;
   posterPath: string;
-  rating: number;
+  rating: Rating;
   voteCount: number;
   voteAverage: number;
   duration: number;

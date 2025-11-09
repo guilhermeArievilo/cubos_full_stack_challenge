@@ -1,6 +1,7 @@
 import Movie, { MovieProps } from "../../entities/movie";
 import Genre from "../../entities/genre";
 import { Language } from "../../entities/language";
+import { RatingData } from "../../entities/rating";
 
 export type ListDataRequestDto<T> = {
   page?: number;
@@ -39,4 +40,5 @@ export default abstract class MovieRepository {
   abstract findGenreBySlug(slug: string): Promise<Genre | null>
   abstract listGenres(): Promise<Genre[]>
   abstract listLanguages(): Language[]
+  abstract listRatings(): RatingData[]
 }
