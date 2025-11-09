@@ -9,22 +9,25 @@ import AddMovieFormStepper from "../../forms/add-movie/wizard/add-movie-form-ste
 import SubmitButtonFormWizard from "../../forms/add-movie/buttons/submit-button-form-wizard";
 import { Language } from "../../../domain/entities/language";
 import { useState } from "react";
+import { ContentType } from "@/core/features/upload/domain/entities/contentType";
 
 interface AddMovieDrawerProps {
-  open: boolean;
   onClose?: () => void;
   onOpenChange: (status: boolean) => void;
   onCreateGenre: () => void;
+  onUploadFile?: (fileName: string, contentType: ContentType, file: File) => Promise<{ uploadPath: string } | null>;
+  open: boolean;
   genreDataOptions?: Genre[];
   createdGenres?: Genre[];
   languageDataOptions?: Language[];
 }
 
 export default function AddMovieDrawer({
-  open = false,
   onOpenChange,
   onClose,
   onCreateGenre,
+  onUploadFile,
+  open = false,
   genreDataOptions,
   createdGenres,
   languageDataOptions
@@ -53,6 +56,7 @@ export default function AddMovieDrawer({
                 <div className="px-6 flex-1 overflow-y-auto">
                   <AddMovieFormStepper
                     onCreateGenre={onCreateGenre}
+                    onUploadFile={onUploadFile}
                     genres={genreDataOptions}
                     createdGenres={createdGenres}
                     languages={languageDataOptions}

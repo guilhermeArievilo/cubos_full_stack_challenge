@@ -17,15 +17,33 @@ import ListMoviesUseCase from '../features/movie/domain/use-cases/listMoviesUseC
 import UpdateMovieUseCase from '../features/movie/domain/use-cases/updateMovieUseCase';
 import ListLanguagesUseCase from '../features/movie/domain/use-cases/listLanguagesUseCase';
 import LanguageRemoteDatasource from '../features/movie/data/datasource/languageRemoteDatasource';
+import BucketRemoteUploadDatasource from '../features/upload/data/datasource/bucketRemoteUploadDatasource';
+import UploadRemoteDatasource from '../features/upload/data/datasource/uploadRemoteDatasource';
+import UploadRepositoryImpl from '../features/upload/data/repository/uploadRepositoryImpl';
+import UploadUseCase from '../features/upload/domain/use-cases/uploadFileUseCase';
 
 
 export default function useContainer() {
   const authStore = useAuthStore()
   const authRemoteDatasource = new AuthRemoteDatasource();
 
+  const bucketRemoteUploadDatasource = new BucketRemoteUploadDatasource();
+  const uploadRemoteDatasource = new UploadRemoteDatasource();
+
   const movieRemoteDatasource = new MovieRemoteDatasource();
   const genreRemoteDatasource = new GenreRemoteDatasource();
   const languageRemoteDatasource = new LanguageRemoteDatasource();
+
+  const uploadRepository = new UploadRepositoryImpl(
+    bucketRemoteUploadDatasource,
+    uploadRemoteDatasource
+  );
+
+  const uploadUseCase = new UploadUseCase(uploadRepository);
+
+  const uploadModule = {
+    upload: uploadUseCase
+  }
 
   const authRepository = new AuthRepositoryImpl(authRemoteDatasource, authStore);
   
@@ -69,6 +87,7 @@ export default function useContainer() {
 
   return {
     authModule,
-    movieModule
+    movieModule,
+    uploadModule
   }
 }

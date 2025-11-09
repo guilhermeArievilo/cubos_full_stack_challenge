@@ -8,17 +8,31 @@ import { useEffect, useState } from "react";
 import { Genre } from "@/core/features/movie/domain/entities/genre";
 import useContainer from "@/core/di/container";
 import { Language } from "@/core/features/movie/domain/entities/language";
+import { ContentType } from "@/core/features/upload/domain/entities/contentType";
+import { toast } from "sonner";
 
 export default function HomePage() {
   const [triggerAddMovieDrawer, setTriggerAddMovieDrawer] = useState<boolean>(false)
   const [triggerAddMovieFliterDialog, setTriggerAddMovieFliterDialog] = useState<boolean>(false)
   const [triggerAddGenrePopover, setTriggerAddGenrePopover] = useState<boolean>(false)
 
-  const { movieModule } = useContainer()
+  const { movieModule, uploadModule } = useContainer()
 
   const [genres, setGenres] = useState<Genre[]>([])
   const [atualCreatedGenre, setCreatedGenre] = useState<Genre | null>(null)
   const [languages, setLanguages] = useState<Language[]>([])
+
+  async function uploadFile(fileName: string, contentType: ContentType, file: File) {
+    try {
+      toast.info("Fazendo upload...");
+      const res = await uploadModule.upload.execute(fileName, contentType, file);
+      toast.success("Upload realizado com sucesso.");
+      return res
+    } catch {
+      toast.error("Ops, algo deu errado aqui, tente de novo.");
+      return null;
+    }
+  }
 
   async function createGenre(name: string) {
     const genre = await movieModule.createGenre.execute(name);
@@ -57,6 +71,7 @@ export default function HomePage() {
         open={triggerAddMovieDrawer}
         onOpenChange={setTriggerAddMovieDrawer}
         onCreateGenre={() => setTriggerAddGenrePopover(true)}
+        onUploadFile={uploadFile}
         genreDataOptions={genres}
         createdGenres={atualCreatedGenre ? [atualCreatedGenre] : []}
         languageDataOptions={languages}

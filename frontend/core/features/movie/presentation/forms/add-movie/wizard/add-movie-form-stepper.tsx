@@ -7,19 +7,22 @@ import PopularityStepForm, { PopularityFormSchemaType } from "../steps /populari
 import { Stepper, StepperIndicator, StepperItem, StepperTitle, StepperTrigger } from "@/components/ui/stepper";
 import { useAddMovieFormWizard } from "./add-movie-form-wizard-context";
 import { Language } from "@/core/features/movie/domain/entities/language";
+import { ContentType } from "@/core/features/upload/domain/entities/contentType";
 
 interface AddMovieFormByStepProps {
   genres?: Genre[];
   createdGenres?: Genre[];
   languages?: Language[];
   onCreateGenre: () => void;
+  onUploadFile?: (fileName: string, contentType: ContentType, file: File) => Promise<{ uploadPath: string } | null>;
 }
 
 export default function AddMovieFormStepper({
   genres,
   languages,
   onCreateGenre,
-  createdGenres
+  createdGenres,
+  onUploadFile
 }: AddMovieFormByStepProps) {
   const { currentStep, setCurrentStep, steps, setCurrentFormMethods, fullData } = useAddMovieFormWizard();
 
@@ -54,7 +57,11 @@ export default function AddMovieFormStepper({
         />
         :
         currentStep === 2 ?
-        <MediaStepForm values={fullData} onFormReady={setCurrentFormMethods}/>
+        <MediaStepForm
+          values={fullData}
+          onFormReady={setCurrentFormMethods}
+          onUploadFile={onUploadFile}
+        />
         :
         currentStep === 3 ?
         <PopularityStepForm values={fullData} onFormReady={setCurrentFormMethods}/>
