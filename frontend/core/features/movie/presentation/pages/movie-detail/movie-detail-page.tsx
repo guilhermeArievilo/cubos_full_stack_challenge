@@ -7,10 +7,27 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import AttributesMovie from "../../components/attributes-movie";
 import VoteAveragePerCentChart from "../../components/vote-average-per-cent-chart";
+import { Language } from "../../../domain/entities/language";
+import { RatingData } from "../../../domain/entities/rating";
+import { formatDateToDDMMYYYY, formatMinutesToReadable, formatNumber } from "@/lib/utils";
+import { movieStatus } from "../../../domain/entities/movieStatus";
 
 export default function MovieDetailPage({ slug }: { slug: string }) {
   const [movie, setMovie] = useState<Movie | null>(null);
   const { movieModule } = useContainer();
+
+  const [languages, setLanguages] = useState<Language[]>([])
+  const [ratings, setRatings] = useState<RatingData[]>([])
+  
+  async function fetchLanguages() {
+    const data = await movieModule.listLanguages.execute();
+    setLanguages(data);
+  }
+
+  async function fetchRatings() {
+    const data = await movieModule.listRatings.execute();
+    setRatings(data);
+  }
 
   async function fetchMovieBySlug() {
     const movie = await movieModule.getMovieBySlug.execute(slug);
@@ -19,6 +36,8 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
 
   useEffect(() => {
     fetchMovieBySlug();
+    fetchLanguages();
+    fetchRatings();
   }, [slug])
 
   if (!movie) {
@@ -77,7 +96,7 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
             <div className="col-span-12 flex gap-6 items-center">
               <div className="flex-1">
                 <AttributesMovie label="Classificação indicativa" labelSize="sm">
-                  <span>{movie.rating}</span>
+                  <span>{ ratings.length ? ratings.find((curr) => curr.value === movie.rating)?.label : 'Carregando...' }</span>
                 </AttributesMovie>
               </div>
               <div className="">
@@ -90,43 +109,43 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
 
             <div className="col-span-6">
               <AttributesMovie label="Lançamento" labelSize="sm">
-                <span>{movie.releaseDate.toString()}</span>
+                <span>{formatDateToDDMMYYYY(movie.releaseDate.toString())}</span>
               </AttributesMovie>
             </div>
 
             <div className="col-span-6">
               <AttributesMovie label="Duração" labelSize="sm">
-                <span>{movie.duration}</span>
+                <span>{formatMinutesToReadable(movie.duration)}</span>
               </AttributesMovie>
             </div>
 
             <div className="col-span-6">
               <AttributesMovie label="Situação" labelSize="sm">
-                <span>{movie.releaseDate.toString()}</span>
+                <span>{movieStatus.find((curr) => curr.value === movie.status)?.label ?? 'Desconhecido'}</span>
               </AttributesMovie>
             </div>
 
             <div className="col-span-6">
               <AttributesMovie label="Idioma" labelSize="sm">
-                <span>{movie.originalLanguage}</span>
+                <span>{ languages.length ? (languages.find((curr) => curr.value === movie.originalLanguage))?.label : 'Carregando...' }</span>
               </AttributesMovie>
             </div>
 
             <div className="col-span-4">
               <AttributesMovie label="Orçamento" labelSize="sm">
-                <span>{movie.duration}</span>
+                <span>{formatNumber(movie.budget)}</span>
               </AttributesMovie>
             </div>
 
             <div className="col-span-4">
               <AttributesMovie label="Receita" labelSize="sm">
-                <span>{movie.releaseDate.toString()}</span>
+                <span>{formatNumber(movie.revenue)}</span>
               </AttributesMovie>
             </div>
 
             <div className="col-span-4">
               <AttributesMovie label="Lucro" labelSize="sm">
-                <span>{movie.originalLanguage}</span>
+                <span>{formatNumber(movie.revenue - movie.budget)}</span>
               </AttributesMovie>
             </div>
           </div>
