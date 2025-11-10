@@ -50,5 +50,9 @@ export default class AddMovieUseCase {
     const movie = new Movie(data, user.id!);
 
     await this.movieRepository.addMovie(movie);
+
+    if (new Date(movie.releaseDate) > new Date()) {
+      this.movieRepository.createScheduleEvent(movie, [user.email]);
+    }
   }
 }

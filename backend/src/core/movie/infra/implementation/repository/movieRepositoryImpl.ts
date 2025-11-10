@@ -11,9 +11,12 @@ import { Language } from "@/core/movie/domain/entities/language";
 import { movieLanguages } from "../datasource/in-memory/languages";
 import { RatingData } from "@/core/movie/domain/entities/rating";
 import { allRatingsData } from "../datasource/in-memory/ratingsInMemoryDatasource";
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { MovieEvent } from "@/core/movie/domain/entities/movieEvent";
 @Injectable()
 export default class MovieRepositoryImpl implements MovieRepository {
   constructor(
+    private eventEmitter: EventEmitter2,
     private prismaService: PrismaService
   ) {}
 
@@ -204,5 +207,15 @@ export default class MovieRepositoryImpl implements MovieRepository {
   async listGenres(): Promise<Genre[]> {
     const prismaRawGenres = await this.prismaService.genre.findMany();
     return prismaRawGenres.map(MovieGenrePrismaMapper.toDomain);
+  }
+
+  createScheduleEvent(movie: Movie, to: string[]): void {
+    this.eventEmitter.emit(
+      'movie.scheduled',
+      {
+        movie,
+        to
+      } as MovieEvent
+    )
   }
 }

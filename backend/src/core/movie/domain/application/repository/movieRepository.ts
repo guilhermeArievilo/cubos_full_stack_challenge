@@ -41,4 +41,5 @@ export default abstract class MovieRepository {
   abstract listGenres(): Promise<Genre[]>
   abstract listLanguages(): Language[]
   abstract listRatings(): RatingData[]
+  abstract createScheduleEvent(movie: Movie, to: string[]): void
 }
