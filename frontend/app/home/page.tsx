@@ -55,6 +55,7 @@ export default function HomePage() {
         status: MovieStatus[data.status as keyof typeof MovieStatus],
         releaseDate: new Date(data.releaseDate)
       });
+      await fetchMovies();
       toast.success(`${data.title} foi cadastrado.`)
       setTriggerAddMovieDrawer(false);
       return 'success';
@@ -117,7 +118,7 @@ export default function HomePage() {
             <span className="col-span-10 flex items-center justify-center text-on-surface-variant/40">Nenhum filme por enquanto...</span>
           ) : (
             moviePaginatedData.data.map((movie: MovieCard) => (
-              <Link href={`/movie/${movie.slug}`} className="col-span-2 flex" key={movie.id}>
+              <Link href={`/movie/${movie.slug}`} className="col-span-2" key={movie.id}>
                 <CMovieCard movie={movie}/>
               </Link>
             ))

@@ -52,7 +52,7 @@ export default function SearchForm({ handleSearch }: SearchFormProps) {
           )}
         />
         <div className="absolute top-0 right-0 h-full flex justify-between items-center gap-8">
-          <Button type="submit" size={"icon-lg"} variant={"secondary"} className="bg-transparent!">
+          <Button type="submit" size={"icon-lg"} variant={"secondary"} className="bg-transparent! backdrop-blur-none">
             <Search />
           </Button>
         </div>

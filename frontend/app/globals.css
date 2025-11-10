@@ -173,6 +173,11 @@
     transition: all 0.3s ease-in-out;
   }
 
+  .vote-average {
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+  }
+
   .info {
     transform: translateY(16px);
     .genres {
@@ -183,6 +188,10 @@
   }
 
   &:hover{
+    .vote-average {
+      opacity: 1;
+    }
+
     .backdrop {
       top: -10%;
     }

@@ -39,7 +39,7 @@ export default function CMovieCard({ movie, onClick }: MovieCardProps) {
         <Image src={`/images/${movie.posterPath}`} alt={movie.title} width={355} height={235} className="w-full h-full object-cover"/>
       </div>
       
-      <div className="flex-1 flex flex-col items-center justify-center gap-6 z-10!">
+      <div className="vote-average flex-1 flex flex-col items-center justify-center gap-6 z-10!">
         <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px] w-full"

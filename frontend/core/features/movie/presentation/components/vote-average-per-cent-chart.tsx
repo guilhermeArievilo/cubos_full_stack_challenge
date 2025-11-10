@@ -22,50 +22,52 @@ export default function VoteAveragePerCentChart({ voteAverage }: VoteAveragePerC
   } satisfies ChartConfig
 
   return (
-    <ChartContainer
-      config={chartConfig}
-      className="mx-auto aspect-square max-h-[250px] w-fit"
-    >
-      <RadialBarChart
-        data={chartData}
-        startAngle={90}
-        endAngle={(voteAveragePerCent * 360)/100}
-        innerRadius={80}
-        outerRadius={110}
+    <div className="max-w-[200px] w-full">
+      <ChartContainer
+        config={chartConfig}
+        className="mx-auto aspect-square max-h-[250px] w-full"
       >
-        <PolarGrid
-          gridType="circle"
-          radialLines={false}
-          stroke="none"
-          className="first:fill-muted last:fill-background fill-surface-container-lowest/80!"
-          polarRadius={[86, 74]}
-        />
-        <RadialBar dataKey="voteAverage" background cornerRadius={10} />
-        <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-          <Label
-            content={({ viewBox }) => {
-              if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                return (
-                  <text
-                    x={viewBox.cx}
-                    y={viewBox.cy}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                  >
-                    <tspan
+        <RadialBarChart
+          data={chartData}
+          startAngle={90}
+          endAngle={(voteAveragePerCent * 360)/100}
+          innerRadius={80}
+          outerRadius={110}
+        >
+          <PolarGrid
+            gridType="circle"
+            radialLines={false}
+            stroke="none"
+            className="first:fill-muted last:fill-background fill-surface-container-lowest/80!"
+            polarRadius={[86, 74]}
+          />
+          <RadialBar dataKey="voteAverage" background cornerRadius={10} />
+          <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+            <Label
+              content={({ viewBox }) => {
+                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  return (
+                    <text
                       x={viewBox.cx}
                       y={viewBox.cy}
-                      className="fill-chart-3 text-4xl font-bold"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
                     >
-                      {chartData[0].voteAverage.toLocaleString() + '%'}
-                    </tspan>
-                  </text>
-                )
-              }
-            }}
-          />
-        </PolarRadiusAxis>
-      </RadialBarChart>
-    </ChartContainer>
+                      <tspan
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        className="fill-chart-3 text-4xl font-bold"
+                      >
+                        {chartData[0].voteAverage.toLocaleString() + '%'}
+                      </tspan>
+                    </text>
+                  )
+                }
+              }}
+            />
+          </PolarRadiusAxis>
+        </RadialBarChart>
+      </ChartContainer>
+    </div>
   )
 }
