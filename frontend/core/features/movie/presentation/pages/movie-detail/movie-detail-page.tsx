@@ -11,13 +11,30 @@ import { Language } from "../../../domain/entities/language";
 import { RatingData } from "../../../domain/entities/rating";
 import { formatDateToDDMMYYYY, formatMinutesToReadable, formatNumber } from "@/lib/utils";
 import { movieStatus } from "../../../domain/entities/movieStatus";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import AlertDeleteMovieDialog from "../../dialogs/alert-delete-movie/alert-delete-movie-dialog";
 
 export default function MovieDetailPage({ slug }: { slug: string }) {
+  const router = useRouter();
+  const [deleteMovieTrigger, setDeleteMovieTrigger] = useState<boolean>(false);
   const [movie, setMovie] = useState<Movie | null>(null);
   const { movieModule } = useContainer();
 
   const [languages, setLanguages] = useState<Language[]>([])
   const [ratings, setRatings] = useState<RatingData[]>([])
+
+  async function handleDeleteMovie() {
+    if (!movie) return;
+    try {
+      toast.error("Deletando filme...");
+      await movieModule.deleteMovie.execute(movie.id);
+      toast.success("Filme deletado com sucesso.");
+      router.replace('/home');
+    } catch {
+      toast.error("Ops, algo deu errado ao deletar o filme.");
+    }
+  }
   
   async function fetchLanguages() {
     const data = await movieModule.listLanguages.execute();
@@ -88,7 +105,7 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
 
         <div className="col-span-6 flex flex-col gap-4 py-8 z-10">
           <div className="flex justify-end items-center gap-4">
-            <Button variant="secondary" >Deletar</Button>
+            <Button variant="secondary" onClick={() => setDeleteMovieTrigger(true)}>Deletar</Button>
             <Button>Editar</Button>
           </div>
 
@@ -166,6 +183,13 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
         ></iframe>
         </div>
       </section>
+
+      <AlertDeleteMovieDialog
+        open={deleteMovieTrigger}
+        onClose={() => setDeleteMovieTrigger(false)}
+        onConfirm={handleDeleteMovie}
+        title={movie.title}
+      />
     </>
   )
 }
