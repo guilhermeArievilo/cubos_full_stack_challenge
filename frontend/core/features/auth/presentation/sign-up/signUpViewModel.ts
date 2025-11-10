@@ -1,9 +1,9 @@
 'use client'
-import useContainer from "@/core/di/container";
 import { RegisterDTO } from "../../domain/entities/authEntities";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useContainer } from "@/core/di/ContainerContext";
 
 export default function useSignUpViewModel() {
   const [status, setStatus] = useState<'sending' | 'success' | 'error'>();

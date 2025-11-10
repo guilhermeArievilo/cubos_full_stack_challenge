@@ -22,7 +22,8 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@icons/*": ["./ui/assets/icons/*"]
+      "@icons/*": ["./ui/assets/icons/*"],
+      "@features/*": ["./core/features/*"]
     }
   },
   "include": [

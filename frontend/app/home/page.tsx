@@ -6,7 +6,6 @@ import AddMovieFilterDialog from "@/core/features/movie/presentation/dialogs/add
 import AddMovieDrawer from "@/core/features/movie/presentation/drawers/add-movie/add-movie-drawer";
 import { useEffect, useState } from "react";
 import { Genre } from "@/core/features/movie/domain/entities/genre";
-import useContainer from "@/core/di/container";
 import { Language } from "@/core/features/movie/domain/entities/language";
 import { ContentType } from "@/core/features/upload/domain/entities/contentType";
 import { toast } from "sonner";
@@ -16,6 +15,7 @@ import { Rating, RatingData } from "@/core/features/movie/domain/entities/rating
 import { timeStringToMinutes } from "@/lib/utils";
 import { MovieStatus } from "@/core/features/movie/domain/entities/movieStatus";
 import { PaginatedDataResponseDto } from "@/core/features/movie/domain/repository/movieRepository";
+import { useContainer } from "@/core/di/ContainerContext";
 
 export default function HomePage() {
   const [triggerAddMovieDrawer, setTriggerAddMovieDrawer] = useState<boolean>(false)

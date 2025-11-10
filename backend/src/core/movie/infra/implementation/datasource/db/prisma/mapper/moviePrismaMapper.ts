@@ -11,7 +11,6 @@ type RawMovieWithGenres = RawMovie & {
 
 export default class MoviePrismaMapper {
   static toPrisma(movie: Movie): Prisma.MovieUncheckedCreateInput {
-    console.log(movie)
     const genresRefs = movie.genres.map((currGenre) => {
       if (typeof currGenre === 'string') {
         return {
@@ -24,7 +23,6 @@ export default class MoviePrismaMapper {
       }
     });
 
-    console.log(genresRefs)
 
     return {
       id: movie.id,

@@ -77,15 +77,6 @@ export default class MovieRepositoryImpl implements MovieRepository {
       where
     });
 
-    console.log({
-      where,
-      orderBy: {
-        [orderBy]: order
-      },
-      skip,
-      take,
-      include: { genres: true }
-    })
     const rawMovies = await this.prismaService.movie.findMany({
       where,
       orderBy: {
@@ -129,7 +120,6 @@ export default class MovieRepositoryImpl implements MovieRepository {
   }
 
   async addMovie(movie: Movie): Promise<void> {
-    console.log('repo', movie)
     const prismaRawMovie = MoviePrismaMapper.toPrisma(movie);
 
 

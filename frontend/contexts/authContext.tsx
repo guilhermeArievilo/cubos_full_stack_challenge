@@ -1,9 +1,11 @@
 'use client'
 import { useRouter } from 'next/navigation';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import useContainer from '@/core/di/container'
 import { toast } from 'sonner';
 import { LoginDTO } from '@/core/features/auth/domain/entities/authEntities';
+import { useContainer } from '@/core/di/ContainerContext';
+import { useAuthStore } from '@/core/features/auth/data/datasource/authStoreDatasource';
+import { usePathname } from 'next/navigation';
 
 
 type AuthStatus = 'authenticating' | 'authenticated' | 'unauthenticated';
@@ -17,10 +19,13 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
+const restrictedRoutesWhenAuthenticated = ['/', '/sign-up'];
+
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { accessToken, isAuthenticated } = useAuthStore();
   const [status, setStatus] = useState<AuthStatus>('unauthenticated');
-  const [isAuthenticated, setAuth] = useState(false);
   const router = useRouter();
+  const pathname = usePathname()
   const { authModule } = useContainer()
 
   useEffect(() => {
@@ -60,12 +65,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    if (status === 'authenticated') {
-      setAuth(true);
+    if (!isAuthenticated) {
+      setStatus('unauthenticated');
+      router.replace('/');
     } else {
-      setAuth(false);
+      setStatus('authenticated');
+      if (restrictedRoutesWhenAuthenticated.includes(pathname)) {
+        router.replace('/home');
+      }
     }
-  }, [status])
+  })
   return (
     <AuthContext.Provider value={{
       login,

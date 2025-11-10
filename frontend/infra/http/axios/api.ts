@@ -2,10 +2,6 @@ import axios, { AxiosError } from 'axios'
 import type { AxiosRequestConfig } from 'axios'
 import { httpErrorHandler } from '../errorHandling/httpErrorHandling'
 import { useAuthStore } from '@/core/features/auth/data/datasource/authStoreDatasource'
-import AuthRemoteDatasource from '@/core/features/auth/data/datasource/authRemoteDatasource'
-import AuthRepositoryImpl from '@/core/features/auth/data/repository/authRepositoryImpl'
-import LogoutUseCase from '@/core/features/auth/domain/use-cases/logoutUseCase'
-import useContainer from '@/core/di/container'
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL
@@ -63,8 +59,9 @@ api.interceptors.response.use(
         processQueue(null, newToken)
         return api(originalRequest)
       } catch (err) {
-        processQueue(err, null)
-        useContainer().authModule.logoutUseCase.execute()
+        processQueue(err, null);
+        await api.post('/auth/logout');
+        useAuthStore.getState().clearAccessToken();
         return Promise.reject(err);
       } finally {
         isRefreshing = false

@@ -38,6 +38,6 @@ export default class AuthRepositoryImpl implements AuthRepository {
 
   clearAccessToken(): void {
     const store = this.authLocalDatasource;
-    store.clearAcessToken();
+    store.clearAccessToken();
   }
 }

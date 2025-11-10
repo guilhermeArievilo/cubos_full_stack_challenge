@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -8,6 +6,7 @@ import Header from "@/components/header";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from '@/contexts/authContext';
 import { Toaster } from '@/components/ui/sonner';
+import { ContainerProvider } from '@/core/di/ContainerContext';
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -30,12 +29,14 @@ export default function RootLayout({
         className={`${inter.variable} antialiased flex flex-col min-h-screen text-on-surface`}
       >
         <ThemeProvider attribute={'class'} defaultTheme="dark">
-          <AuthProvider>
-            <Header />
-            {children}
-            <Footer />
-            <Toaster />
-          </AuthProvider>
+          <ContainerProvider>
+            <AuthProvider>
+              <Header />
+              {children}
+              <Footer />
+              <Toaster />
+            </AuthProvider>
+          </ContainerProvider>
         </ThemeProvider>
       </body>
     </html>
