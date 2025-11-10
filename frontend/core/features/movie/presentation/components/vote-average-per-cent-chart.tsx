@@ -25,7 +25,7 @@ export default function VoteAveragePerCentChart({ voteAverage }: VoteAveragePerC
     <div className="max-w-[200px] w-full">
       <ChartContainer
         config={chartConfig}
-        className="mx-auto aspect-square max-h-[250px] w-full"
+        className="mx-auto aspect-square max-h-[180px] w-full"
       >
         <RadialBarChart
           data={chartData}

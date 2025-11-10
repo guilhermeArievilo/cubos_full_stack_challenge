@@ -138,7 +138,7 @@ export default function GeralStepForm({
           control={form.control}
           name="title"
           render={({ field }) => (
-            <FormItem className="col-span-1">
+            <FormItem className="col-span-2 sm:col-span-1">
               <FormLabel>Título</FormLabel>
               <FormControl>
                 <Input
@@ -155,7 +155,7 @@ export default function GeralStepForm({
           control={form.control}
           name="originalTitle"
           render={({ field }) => (
-            <FormItem className="col-span-1">
+            <FormItem className="col-span-2 sm:col-span-1">
               <FormLabel>Título Original</FormLabel>
               <FormControl>
                 <Input
@@ -264,7 +264,7 @@ export default function GeralStepForm({
           control={form.control}
           name="duration"
           render={({ field }) => (
-            <FormItem className="col-span-1">
+            <FormItem className="col-span-2 sm:col-span-1">
               <FormLabel>Duração</FormLabel>
               <FormControl>
                 <Input
@@ -284,7 +284,7 @@ export default function GeralStepForm({
           control={form.control}
           name="status"
           render={({ field }) => (
-            <FormItem className="col-span-1 flex flex-col">
+            <FormItem className="col-span-2 sm:col-span-1 flex flex-col">
               <FormLabel>Situação</FormLabel>
               <FormControl>
                 <Select
@@ -314,7 +314,7 @@ export default function GeralStepForm({
           control={form.control}
           name="originalLanguage"
           render={({ field }) => (
-            <FormItem className="col-span-1 flex flex-col">
+            <FormItem className="col-span-2 sm:col-span-1 flex flex-col">
               <FormLabel>Linguagem original</FormLabel>
               <FormControl>
                 <Select
@@ -344,7 +344,7 @@ export default function GeralStepForm({
           control={form.control}
           name="releaseDate"
           render={({ field }) => (
-            <FormItem className="col-span-1">
+            <FormItem className="col-span-2 sm:col-span-1">
               <FormLabel>Data de lançamento</FormLabel>
               <FormControl>
                 <Input

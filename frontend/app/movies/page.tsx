@@ -171,20 +171,22 @@ export default function HomePage() {
     });
   }, [searchParams.toString()]);
   return (
-    <main className="grow flex flex-col gap-6">
-      <section className="flex justify-end items-center gap-3 mt-6 mx-6">
+    <main className="2xl:container 2xl:mx-auto grow flex flex-col gap-6">
+      <section className="flex flex-wrap justify-end items-center gap-3 mt-6 mx-6">
         <SearchForm handleSearch={searchBy} />
-        <Button variant={'secondary'} onClick={() => setTriggerAddMovieFliterDialog(true)}>Filtros</Button>
-        <Button onClick={() => setTriggerAddMovieDrawer(true)}>Adicionar Filme</Button>
+        <div className="flex items-center gap-3 flex-1 sm:flex-none">
+          <Button className="flex-1" variant={'secondary'} onClick={() => setTriggerAddMovieFliterDialog(true)}>Filtros</Button>
+          <Button className="flex-1" onClick={() => setTriggerAddMovieDrawer(true)}>Adicionar Filme</Button>
+        </div>
       </section>
 
-      <section className="flex-1 grid grid-cols-10 gap-6 bg-surface-container-highest/30 backdrop-blur-xs p-6 mx-6">
+      <section className="flex-1 grid grid-cols-12 md:grid-cols-15 gap-6 bg-surface-container-highest/30 backdrop-blur-xs p-6 mx-6">
         {
           !moviePaginatedData ? (
-            <span className="col-span-10 flex items-center justify-center text-on-surface-variant/40">Nenhum filme por enquanto...</span>
+            <span className="col-span-15 flex items-center justify-center text-on-surface-variant/40">Nenhum filme por enquanto...</span>
           ) : (
             moviePaginatedData.data.map((movie: MovieCard) => (
-              <Link href={`/movie/${movie.slug}`} className="col-span-2" key={movie.id}>
+              <Link href={`/movies/${movie.slug}`} className="col-span-6 md:col-span-5 xl:col-span-3" key={movie.id}>
                 <CMovieCard movie={movie}/>
               </Link>
             ))

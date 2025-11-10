@@ -9,7 +9,7 @@ export default function Header() {
   const { isAuthenticated, logout } = useAuth();
   return (
     <header className="sticky top-0 bg-surface/30 backdrop-blur-xl flex justify-between items-center gap-8 p-4 border-b border-b-outline-variant/20 z-40">
-      <Link href={isAuthenticated ? '/home' : '/'} className="flex items-center gap-4">
+      <Link href={isAuthenticated ? '/movies' : '/'} className="flex items-center gap-4">
         <Image
           className="dark:invert"
           src="/logo/cube.svg"
@@ -19,7 +19,7 @@ export default function Header() {
           priority
         />
         <Image
-          className="dark:invert"
+          className="dark:invert hidden md:block"
           src="/logo/label_logo.svg"
           alt="Label of Cubos Logo"
           width={110}

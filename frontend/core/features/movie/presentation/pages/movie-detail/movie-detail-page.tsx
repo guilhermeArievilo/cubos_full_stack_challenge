@@ -122,12 +122,12 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
   return (
     <>
       <section className="relative container mx-auto grid grid-cols-12 gap-4 m-6 bg-surface-container/30 p-6 rounded-xs overflow-clip">
-        <div className="absolute top-0 left-0 w-full h-full">
+        <div className="absolute top-0 left-0 w-full h-full lg:block hidden">
           <Image src={`/images/${movie.backdropPath}`} alt={movie.title} width={1920} height={1080} className="w-full h-full object-cover opacity-30"/>
         </div>
 
-        <div className="col-span-3 flex flex-col gap-4 z-10">
-          <div className="flex flex-col gap-1">
+        <div className="col-span-12 md:col-span-6 xl:col-span-3 flex lg:flex-col flex-col-reverse gap-4 z-10">
+          <div className="flex flex-col items-center lg:items-start gap-1">
             <h1 className="text-4xl font-semibold">{movie.title}</h1>
             <h2 className="text-lg font-light">Título original: {movie.originalTitle}</h2>
           </div>
@@ -137,7 +137,16 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
           </div>
         </div>
 
-        <div className="col-span-3 flex flex-col gap-4 py-8 justify-end z-10">
+          {
+            owner && (
+              <div className="flex col-span-12 lg:hidden items-center gap-4">
+                <Button className="flex-1" variant="secondary" onClick={() => setDeleteMovieTrigger(true)}>Deletar</Button>
+                <Button className="flex-1" onClick={() => setEditDrawer(true)}>Editar</Button>
+              </div>
+            )
+          }
+
+        <div className="col-span-12 md:col-span-6 xl:col-span-3 flex flex-col gap-4 py-8 justify-end z-10">
           <div className="flex-1 flex flex-col justify-center">
             <h3 className="text-lg italic font-light p-4">{movie.tagline}</h3>
           </div>
@@ -161,10 +170,10 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
           </AttributesMovie>
         </div>
 
-        <div className="col-span-6 flex flex-col gap-4 py-8 z-10">
+        <div className="col-span-12 xl:col-span-6 flex flex-col gap-4 py-8 z-10">
           {
             owner && (
-              <div className="flex justify-end items-center gap-4">
+              <div className="hidden lg:flex justify-end items-center gap-4">
                 <Button variant="secondary" onClick={() => setDeleteMovieTrigger(true)}>Deletar</Button>
                 <Button onClick={() => setEditDrawer(true)}>Editar</Button>
               </div>
@@ -172,7 +181,7 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
           }
 
           <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 flex gap-6 items-center">
+            <div className="col-span-12 flex lg:gap-6 gap-4 items-center">
               <div className="flex-1">
                 <AttributesMovie label="Classificação indicativa" labelSize="sm">
                   <span>{ ratings.length ? ratings.find((curr) => curr.value === movie.rating)?.label : 'Carregando...' }</span>

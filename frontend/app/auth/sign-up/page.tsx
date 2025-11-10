@@ -5,7 +5,7 @@ import useSignUpViewModel from "@/core/features/auth/presentation/sign-up/signUp
 export default function SignUpPage() {
   const { handleSignUp } = useSignUpViewModel()
   return (
-    <main className="grow container mx-auto flex flex-col items-center justify-center">
+    <main className="grow container xs:mx-auto px-6 flex flex-col items-center justify-center">
       <SignUpForm handleSignUp={handleSignUp}/>
     </main>
   )

@@ -33,7 +33,7 @@ export default function LoginForm({ handleLogin }: LoginFormProps) {
   return (
     <Form {...form}>
       <form
-        className="w-md bg-surface-container p-4 flex flex-col gap-4 items-center rounded-xs"
+        className="w-full xs:w-md bg-surface-container p-4 flex flex-col gap-4 items-center rounded-xs"
         onSubmit={form.handleSubmit(handleLogin)}
       >
         <FormField

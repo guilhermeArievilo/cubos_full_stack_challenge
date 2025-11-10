@@ -33,16 +33,16 @@ export default function CMovieCard({ movie, onClick }: MovieCardProps) {
   } satisfies ChartConfig
 
   return (
-    <div className="movie-card relative aspect-2/3 movie-card w-full bg-surface-container rounded-xs overflow-clip flex flex-col justify-between p-6 cursor-pointer" onClick={onClick}>
+    <div className="movie-card relative aspect-2/3 movie-card w-full bg-surface-container rounded-xs overflow-clip flex flex-col justify-between p-2 sm:p-6 cursor-pointer" onClick={onClick}>
       <div className="backdrop"/>
       <div className="absolute top-0 left-0 w-full h-full">
         <Image src={`/images/${movie.posterPath}`} alt={movie.title} width={355} height={235} className="w-full h-full object-cover"/>
       </div>
       
-      <div className="vote-average flex-1 flex flex-col items-center justify-center gap-6 z-10!">
+      <div className="vote-average flex-1 flex flex-col items-center justify-center gap-6 z-10! shrink">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] w-full"
+          className="mx-auto aspect-square max-h-[180px] w-full"
         >
           <RadialBarChart
             data={chartData}
@@ -87,8 +87,8 @@ export default function CMovieCard({ movie, onClick }: MovieCardProps) {
         </ChartContainer>
       </div>
       <article className="info flex flex-col gap-2 z-10">
-        <h3 className="text-2xl uppercase">{movie.title}</h3>
-        <span className="genres">
+        <h3 className="text-xs sm:text-md md:text-lg 2xl:text-2xl uppercase sm:truncate w-full">{movie.title}</h3>
+        <span className="genres text-xs sm:text-md">
           { movie.genres.reduce((prevGen, currGen) => prevGen + (prevGen ? ', ' : '') + currGen.name,'') }
         </span>
       </article>

@@ -121,7 +121,7 @@ export default function ApplyFiltersForm({
         <div className="col-span-2 flex flex-col gap-2">
           <span className="text-xl font-semibold">Data de lançamento</span>
 
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <FormField
               control={form.control}
               name="releaseDateStart"
