@@ -11,7 +11,7 @@ interface AddMovieFilterDialogProps {
 export default function AddMovieFilterDialog({ open, onOpenChange }: AddMovieFilterDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="rounded-xs border-outline-variant/10">
+      <DialogContent className="rounded-xs">
         <DialogHeader>
           <DialogTitle>Filtros</DialogTitle>
         </DialogHeader>

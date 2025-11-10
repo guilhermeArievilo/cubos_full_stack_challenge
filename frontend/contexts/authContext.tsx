@@ -19,10 +19,10 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-const restrictedRoutesWhenAuthenticated = ['/', '/sign-up'];
+const restrictedRoutesWhenAuthenticated = ['/', '/sign-up', '/forgot-password'];
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { accessToken, isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const [status, setStatus] = useState<AuthStatus>('unauthenticated');
   const router = useRouter();
   const pathname = usePathname()
@@ -67,9 +67,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isAuthenticated) {
       setStatus('unauthenticated');
-      router.replace('/');
+      if (!restrictedRoutesWhenAuthenticated.includes(pathname)) {
+        router.replace('/');
+      }
     } else {
       setStatus('authenticated');
+      debugger
       if (restrictedRoutesWhenAuthenticated.includes(pathname)) {
         router.replace('/home');
       }
