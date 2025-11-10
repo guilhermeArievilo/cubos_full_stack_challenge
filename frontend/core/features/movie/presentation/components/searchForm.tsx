@@ -8,13 +8,13 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 
 const formSchema = z.object({
-  query: z.string().min(1)
+  query: z.string().optional()
 })
 
 type FormSchemaType = z.infer<typeof formSchema>
 
 interface SearchFormProps {
-  handleSearch: (query: string) => void;
+  handleSearch: (query?: string) => void;
 }
 
 export default function SearchForm({ handleSearch }: SearchFormProps) {
