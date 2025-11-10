@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { MovieCard, MovieProps } from "@/core/features/movie/domain/entities/movie";
 import { MovieWizardData } from "@/core/features/movie/presentation/forms/add-movie/wizard/add-movie-form-wizard-context";
 import { Rating, RatingData } from "@/core/features/movie/domain/entities/rating";
-import { timeStringToMinutes } from "@/lib/utils";
+import { formatMinutesToHHMMSS, timeStringToMinutes } from "@/lib/utils";
 import { MovieStatus } from "@/core/features/movie/domain/entities/movieStatus";
 import { ListMoviesParamsRequestDto, PaginatedDataResponseDto } from "@/core/features/movie/domain/repository/movieRepository";
 import { useContainer } from "@/core/di/ContainerContext";
@@ -142,7 +142,26 @@ export default function HomePage() {
         languageDataOptions={languages}
         onClose={() => setCreatedGenre(null)}
       />
-      <AddMovieFilterDialog open={triggerAddMovieFliterDialog} onOpenChange={setTriggerAddMovieFliterDialog}/>
+      <AddMovieFilterDialog
+        open={triggerAddMovieFliterDialog}
+        onOpenChange={setTriggerAddMovieFliterDialog}
+        genres={genres}
+        filters={{
+          genre: query.genre,
+          duration: query.duration ? formatMinutesToHHMMSS(query.duration) : undefined,
+          releaseDateStart: query.releaseDate ? query.releaseDate.start.toISOString().split('T')[0] : undefined,
+          releaseDateEnd: query.releaseDate ? query.releaseDate.end.toISOString().split('T')[0] : undefined,
+        }}
+        applyFilters={(values) => setQuery({
+          ...query,
+          duration: values.duration ? timeStringToMinutes(values.duration) : undefined,
+          genre: values.genre,
+          releaseDate: values.releaseDateStart && values.releaseDateEnd ? {
+            start: new Date(values.releaseDateStart),
+            end: new Date(values.releaseDateEnd)
+          } : undefined
+        })}
+      />
       <AddGenreDialog
         open={triggerAddGenrePopover}
         onOpenChange={setTriggerAddGenrePopover}

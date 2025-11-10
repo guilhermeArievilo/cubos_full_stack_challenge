@@ -35,8 +35,8 @@ export default class MovieRemoteDatasource {
     if (duration !== undefined) queryParams.append('duration', duration.toString())
     if (genre !== undefined) queryParams.append('genre', genre)
 
-    if (releaseDate && releaseDate.start) queryParams.append('startReleaseData', releaseDate.start.toDateString())
-    if (releaseDate && releaseDate.end) queryParams.append('endReleaseData', releaseDate.end.toDateString())
+    if (releaseDate && releaseDate.start) queryParams.append('startReleaseData', releaseDate.start.toISOString())
+    if (releaseDate && releaseDate.end) queryParams.append('endReleaseData', releaseDate.end.toISOString())
 
     const url = `/movie/list?${queryParams.toString()}`
     const res = await api.get<PaginatedDataResponseDto<MovieCard>>(url);

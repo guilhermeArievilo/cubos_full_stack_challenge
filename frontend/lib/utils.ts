@@ -22,6 +22,15 @@ export function formatNumber(num: number): string {
   }).format(num);
 }
 
+export function formatMinutesToHHMMSS(minutes: number) {
+  const dur = dayjs.duration(minutes, 'minutes')
+  const hours = Math.floor(dur.asHours())
+  const mins = dur.minutes()
+  const secs = dur.seconds()
+
+  return `${hours.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`
+}
+
 export function formatMinutesToReadable(minutes: number) {
   const dur = dayjs.duration(minutes, 'minutes')
   const hours = Math.floor(dur.asHours())

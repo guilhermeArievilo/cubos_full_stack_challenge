@@ -46,7 +46,7 @@ export default class MovieRepositoryImpl implements MovieRepository {
       OR.push({
         genres: {
           some: {
-            slug: genre
+            id: genre
           }
         }
       });

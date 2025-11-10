@@ -72,7 +72,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } else {
       setStatus('authenticated');
-      debugger
       if (restrictedRoutesWhenAuthenticated.includes(pathname)) {
         router.replace('/home');
       }
