@@ -33,6 +33,7 @@ export type Movie = {
 export type MovieCard = {
   id: string,
   title: string,
+  slug: string,
   genres: Genre[];
   posterPath: string;
   voteCount: number;

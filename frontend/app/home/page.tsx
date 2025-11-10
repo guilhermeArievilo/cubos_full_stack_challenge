@@ -16,6 +16,8 @@ import { timeStringToMinutes } from "@/lib/utils";
 import { MovieStatus } from "@/core/features/movie/domain/entities/movieStatus";
 import { PaginatedDataResponseDto } from "@/core/features/movie/domain/repository/movieRepository";
 import { useContainer } from "@/core/di/ContainerContext";
+import CMovieCard from "@/core/features/movie/presentation/components/movie-card";
+import Link from "next/link";
 
 export default function HomePage() {
   const [triggerAddMovieDrawer, setTriggerAddMovieDrawer] = useState<boolean>(false)
@@ -102,15 +104,25 @@ export default function HomePage() {
     fetchRatings();
   }, [])
   return (
-    <main className="grow flex flex-col">
-      <section className="flex justify-end items-center gap-3 p-6">
+    <main className="grow flex flex-col gap-6">
+      <section className="flex justify-end items-center gap-3 mt-6 mx-6">
         <SearchForm handleSearch={() => console.log("buscando...")} />
         <Button variant={'secondary'} onClick={() => setTriggerAddMovieFliterDialog(true)}>Filtros</Button>
         <Button onClick={() => setTriggerAddMovieDrawer(true)}>Adicionar Filme</Button>
       </section>
 
-      <section className="flex-1 grid grid-cols-10 gap-6 bg-surface-container-highest/20 p-6 mx-6">
-        <span className="col-span-10 flex items-center justify-center text-on-surface-variant/40">Nenhum filme por enquanto...</span>
+      <section className="flex-1 grid grid-cols-10 gap-6 bg-surface-container-highest/20 p-6 mx-6 mb-6">
+        {
+          !moviePaginatedData ? (
+            <span className="col-span-10 flex items-center justify-center text-on-surface-variant/40">Nenhum filme por enquanto...</span>
+          ) : (
+            moviePaginatedData.data.map((movie: MovieCard) => (
+              <Link href={`/movie/${movie.slug}`} className="col-span-2 flex" key={movie.id}>
+                <CMovieCard movie={movie}/>
+              </Link>
+            ))
+          )
+        }
       </section>
       
       <AddMovieDrawer

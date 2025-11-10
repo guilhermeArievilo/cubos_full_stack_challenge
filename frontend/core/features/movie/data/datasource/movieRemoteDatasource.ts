@@ -9,7 +9,7 @@ export default class MovieRemoteDatasource {
   }
 
   public async findMovieBySlug(slug: string): Promise<Movie> {
-    const res = await api.get<Movie>(`/movie/${slug}`);
+    const res = await api.get<Movie>(`/movie/by/${slug}`);
     return res.data;
   }
 

@@ -54,6 +54,7 @@ export default class MovieViewModel {
   static toPartialHttpMovie({
     id,
     title,
+    slug,
     genres,
     posterPath,
     voteAverage,
@@ -62,6 +63,7 @@ export default class MovieViewModel {
     return {
       id,
       title,
+      slug,
       genres: typeof genres === 'string' ? [] : genres.map((genre) => GenreViewModel.toHttp(genre as Genre)),
       posterPath,
       voteAverage,

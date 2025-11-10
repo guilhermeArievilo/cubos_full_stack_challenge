@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/authContext"
 export default function Header() {
   const { isAuthenticated, logout } = useAuth();
   return (
-    <header className="bg-surface backdrop-blur-2xl flex justify-between items-center gap-8 p-4 border-b border-b-outline-variant/20">
+    <header className="sticky top-0 bg-surface/30 backdrop-blur-xl flex justify-between items-center gap-8 p-4 border-b border-b-outline-variant/20 z-40">
       <div className="flex items-center gap-4">
         <Image
           className="dark:invert"

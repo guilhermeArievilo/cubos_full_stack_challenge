@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         router.replace('/home');
       }
     }
-  })
+  }, [isAuthenticated, pathname, router]);
   return (
     <AuthContext.Provider value={{
       login,
