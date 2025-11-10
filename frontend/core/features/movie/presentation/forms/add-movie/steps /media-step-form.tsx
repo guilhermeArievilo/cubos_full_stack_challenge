@@ -7,14 +7,15 @@ import { useEffect, useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { useAddMovieFormWizard } from "../wizard/add-movie-form-wizard-context";
 
-const formSchema = z.object({
+export const mediaFormSchema = z.object({
   backdropPath: z.string().min(1, 'Adicione uma foto de fundo.'),
   posterPath: z.string().min(1, 'Adicione uma poster'),
   trailerLink: z.string().min(1, 'Adicione um link do trailer do filme.'),
 })
 
-export type MediaFormSchemaType = z.infer<typeof formSchema>
+export type MediaFormSchemaType = z.infer<typeof mediaFormSchema>
 
 interface MediaStepFormProps {
   values?: MediaFormSchemaType;
@@ -23,6 +24,7 @@ interface MediaStepFormProps {
 }
 
 export default function MediaStepForm({ values, onFormReady, onUploadFile }: MediaStepFormProps) {
+  const { resetTrigger } = useAddMovieFormWizard();
   const [backdrop, setBackdrop] = useState<File[] | undefined>();
   const [backdropPreview, setBackdropPreview] = useState<string | undefined>();
 
@@ -30,9 +32,11 @@ export default function MediaStepForm({ values, onFormReady, onUploadFile }: Med
   const [posterPreview, setPosterPreview] = useState<string | undefined>();
 
   const form = useForm<MediaFormSchemaType>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(mediaFormSchema),
     defaultValues: values || {
-      trailerLink: ""
+      trailerLink: "",
+      backdropPath: "",
+      posterPath: ""
     }
   });
 
@@ -77,6 +81,11 @@ export default function MediaStepForm({ values, onFormReady, onUploadFile }: Med
       onFormReady(form);
     }
   }, [form, onFormReady])
+
+
+  useEffect(() => {
+    form.reset();
+  }, [resetTrigger])
 
   return (
     <Form {...form}>

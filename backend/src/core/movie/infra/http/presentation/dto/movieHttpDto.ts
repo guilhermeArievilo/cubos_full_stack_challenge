@@ -12,12 +12,13 @@ export class MovieHttpDTO {
   backdropPath: string;
   posterPath: string;
   rating: Rating;
-  voteCount: number;
-  voteAverage: number;
+  voteCount?: number;
+  voteAverage?: number;
   duration: number;
   status: MovieStatus;
-  budget: number;
-  revenue: number;
+  budget?: number;
+  revenue?: number;
+  profit?: number;
   originalLanguage: string;
   trailerLink: string;
   releaseDate: Date;

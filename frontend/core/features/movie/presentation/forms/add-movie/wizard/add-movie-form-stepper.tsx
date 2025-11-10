@@ -27,7 +27,13 @@ export default function AddMovieFormStepper({
   createdGenres,
   onUploadFile
 }: AddMovieFormByStepProps) {
-  const { currentStep, setCurrentStep, steps, setCurrentFormMethods, fullData } = useAddMovieFormWizard();
+  const {
+    currentStep,
+    setCurrentStep,
+    steps,
+    setCurrentFormMethods,
+    fullData
+  } = useAddMovieFormWizard();
 
   return (
     <div className="flex flex-col gap-6">

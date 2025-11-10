@@ -139,7 +139,7 @@ export default class MovieRepositoryImpl implements MovieRepository {
         ...data,
         status: data.status ? MovieStatusPrismaMapper.toPrismaStatus(data.status) : undefined,
         genres: data.genres ? {
-          connect: data.genres.map(g => {
+          set: data.genres.map(g => {
             if (typeof g === 'string') {
               return {
                 id: g

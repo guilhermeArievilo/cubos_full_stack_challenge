@@ -20,6 +20,7 @@ import CMovieCard from "@/core/features/movie/presentation/components/movie-card
 import Link from "next/link";
 
 export default function HomePage() {
+  const [triggerReset, setTriggerReset] = useState<boolean>(false);
   const [triggerAddMovieDrawer, setTriggerAddMovieDrawer] = useState<boolean>(false)
   const [triggerAddMovieFliterDialog, setTriggerAddMovieFliterDialog] = useState<boolean>(false)
   const [triggerAddGenrePopover, setTriggerAddGenrePopover] = useState<boolean>(false)
@@ -61,6 +62,7 @@ export default function HomePage() {
         status: MovieStatus[data.status as keyof typeof MovieStatus],
         releaseDate: new Date(data.releaseDate)
       });
+      setTriggerReset(!triggerReset);
       await fetchMovies();
       toast.success(`${data.title} foi cadastrado.`)
       setTriggerAddMovieDrawer(false);
@@ -141,6 +143,7 @@ export default function HomePage() {
         createdGenres={atualCreatedGenre ? [atualCreatedGenre] : []}
         languageDataOptions={languages}
         onClose={() => setCreatedGenre(null)}
+        resetTrigger={triggerReset}
       />
       <AddMovieFilterDialog
         open={triggerAddMovieFliterDialog}

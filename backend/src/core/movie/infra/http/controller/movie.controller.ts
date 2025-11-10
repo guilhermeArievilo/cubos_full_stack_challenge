@@ -100,11 +100,13 @@ export class MovieController {
     @Body() updateData: UpdateMovieBodyDTO
   ) {
     const { email } = req.user as JwtPayload;
-    const user = await this.findUserByEmailUseCase.execute(email)
+    const user = await this.findUserByEmailUseCase.execute(email);
 
     await this.updateMovieUseCase.execute(id, {
       ...updateData,
-      genres: updateData.genres?.length ? updateData.genres.map(GenreViewModel.toDomain) : undefined
+      genres: Array.isArray(updateData.genres)
+      ? updateData.genres.filter((g) => typeof g === "string")
+      : undefined
     }, user)
 
     return;

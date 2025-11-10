@@ -54,15 +54,15 @@ model Movie {
 
   rating            Rating
   
-  voteCount         Int     
-  voteAverage       Decimal
+  voteCount         Int?     
+  voteAverage       Decimal?
 
   duration          Int
   
   status            MovieStatus
   
-  budget            Decimal
-  revenue           Decimal
+  budget            Decimal?
+  revenue           Decimal?
   
   originalLanguage  String
   

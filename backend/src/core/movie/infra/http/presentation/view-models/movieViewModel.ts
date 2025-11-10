@@ -22,6 +22,7 @@ export default class MovieViewModel {
       status,
       budget,
       revenue,
+      profit,
       originalLanguage,
       trailerLink,
       releaseDate,
@@ -44,6 +45,7 @@ export default class MovieViewModel {
       status,
       budget,
       revenue,
+      profit,
       originalLanguage,
       trailerLink,
       releaseDate,
@@ -58,7 +60,8 @@ export default class MovieViewModel {
     genres,
     posterPath,
     voteAverage,
-    voteCount
+    voteCount,
+    profit
   }: Movie): PartialHttpMovieDTO {
     return {
       id,
@@ -67,7 +70,8 @@ export default class MovieViewModel {
       genres: typeof genres === 'string' ? [] : genres.map((genre) => GenreViewModel.toHttp(genre as Genre)),
       posterPath,
       voteAverage,
-      voteCount
+      voteCount,
+      profit
     }
   }
 }

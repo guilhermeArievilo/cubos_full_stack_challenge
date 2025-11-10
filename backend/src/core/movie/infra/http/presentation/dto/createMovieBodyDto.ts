@@ -1,9 +1,7 @@
 import { MovieStatus } from "@/core/movie/domain/entities/movieStatus";
-import { IsInt, IsNotEmpty, IsPositive, IsString } from "class-validator";
-import { GenreHttpDto } from "./genreHttpDto";
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, Max, Min } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Rating } from "@/core/movie/domain/entities/rating";
-
 export default class CreateMovieBodyDTO {
   @ApiProperty({ example: 'Bumblebee', description: 'Título do filme' })
   @IsNotEmpty()
@@ -44,13 +42,17 @@ export default class CreateMovieBodyDTO {
   rating: Rating;
   
   @ApiProperty({ description: 'Quantidade de votos' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsPositive()
+  @IsNumber()
   voteCount: number;
   
   @ApiProperty({ description: 'Média de votos' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsPositive()
+  @Min(0, { message: 'O valor mínimo é 0' })
+  @Max(10, { message: 'O valor máximo é 10' })
+  @IsNumber()
   voteAverage: number;
   
   @ApiProperty({ example: '115', description: 'Duração em minutos' })
@@ -64,13 +66,15 @@ export default class CreateMovieBodyDTO {
   status: MovieStatus;
   
   @ApiProperty({ description: 'Orçamento do filme' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsPositive()
+  @IsNumber()
   budget: number;
   
   @ApiProperty({ description: 'Receita do filme' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsPositive()
+  @IsNumber()
   revenue: number;
   
   @ApiProperty({ description: 'Linguagem original' })

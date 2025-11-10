@@ -5,6 +5,7 @@ import ResourceNotFoundError from "../resourceNotFoundError";
 import InvalidCredentialsError from "../invalidCredentialsError";
 import InvalidFieldError from "../invalidFieldError";
 import UserPermissionError from "../userPermissionError";
+import FieldValidationError from "../fieldValidationError";
 
 @Catch(Error)
 export class DomainExceptionFilter implements ExceptionFilter {
@@ -64,6 +65,16 @@ export class DomainExceptionFilter implements ExceptionFilter {
     if (exception instanceof InvalidCredentialsError) {
       return response.status(HttpStatus.UNAUTHORIZED).json({
         errorCode: 'INVALID_CREDENTIALS',
+        message: exception.message,
+      });
+    }
+
+    if (exception instanceof FieldValidationError) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        errorCode: 'FIELD_VALIDATION_ERROR',
+        meta: {
+          field: exception.field
+        },
         message: exception.message,
       });
     }

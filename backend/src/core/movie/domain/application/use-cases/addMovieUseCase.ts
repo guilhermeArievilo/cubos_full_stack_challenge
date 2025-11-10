@@ -5,6 +5,7 @@ import UserRepository from "@/core/user/domain/application/repository/userReposi
 import ResourceNotFoundError from "@/shared/exceptions/resourceNotFoundError";
 import RequiredFieldError from "@/shared/exceptions/requiredFieldError";
 import { ResourceAlreadyExistError } from "@/shared/exceptions/resourceAlreadyExistError";
+import FieldValidationError from "@/shared/exceptions/fieldValidationError";
 
 @Injectable()
 export default class AddMovieUseCase {
@@ -17,12 +18,21 @@ export default class AddMovieUseCase {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new ResourceNotFoundError("User");
 
-    const keys = Object.keys(data);
+    const keys = Object.keys(data).filter((key) => 
+      key !== 'voteCount' &&
+      key !== 'voteAverage' &&
+      key !== 'budget' &&
+      key !== 'revenue'
+    );
 
     for (const key of keys) {
       if (data[key as keyof MovieProps] === undefined) {
         throw new RequiredFieldError(key);
       }
+    }
+
+    if (data.voteAverage && (data.voteAverage < 0 || data.voteAverage > 10)) {
+      throw new FieldValidationError("The average votes should be a value between 0 and 10.");
     }
 
     const result = await Promise.all([

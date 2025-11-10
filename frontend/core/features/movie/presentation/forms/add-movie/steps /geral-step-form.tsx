@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import z from "zod";
+import { useAddMovieFormWizard } from "../wizard/add-movie-form-wizard-context";
 
 const genreId = z.string();
 
@@ -36,7 +37,7 @@ export const RatingSchema = z
     { message: "Classificação indicativa inválida" }
   )
 
-const formSchema = z.object({
+export const geralFormSchema = z.object({
   title: z.string().min(1, 'É necessário um título.'),
   originalTitle: z.string().min(1, 'É necessário um título.'),
   tagline: z.string().min(1, 'É necessário um slogan.'),
@@ -57,7 +58,7 @@ const formSchema = z.object({
     .min(1, "Informe a data de lançamento.")
 })
 
-export type GeralFormSchemaType = z.infer<typeof formSchema>
+export type GeralFormSchemaType = z.infer<typeof geralFormSchema>
 
 interface GeralStepFormProps {
   values?: GeralFormSchemaType;
@@ -78,8 +79,9 @@ export default function GeralStepForm({
   languages,
   onCreateGenre
 }: GeralStepFormProps) {
+  const { resetTrigger } = useAddMovieFormWizard();
   const form = useForm<GeralFormSchemaType>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(geralFormSchema),
     defaultValues: values || {
       title: "",
       originalTitle: "",
@@ -113,7 +115,8 @@ export default function GeralStepForm({
 
   useEffect(() => {
     if (createdGenres?.length) {
-      form.setValue('genres', [...form.getValues('genres'), ...createdGenres.map(genre => genre.id)])
+      const value = [...form.getValues('genres'), ...createdGenres.map(genre => genre.id)];
+      form.setValue('genres', [...new Set(value)]);
     }
   }, [createdGenres])
 
@@ -123,6 +126,9 @@ export default function GeralStepForm({
     }
   }, [form, onFormReady])
 
+  useEffect(() => {
+    form.reset();
+  }, [resetTrigger])
   return (
     <Form {...form}>
       <form className="grid grid-cols-2 gap-4">

@@ -5,24 +5,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import z from "zod";
+import { useAddMovieFormWizard } from "../wizard/add-movie-form-wizard-context";
 
-const formSchema = z.object({
+export const popularityFormSchema = z.object({
   voteCount: z.coerce
     .number({
       error: "A quantidade de votos deve ser um número.",
     })
     .int({ message: "A quantidade de votos deve ser um número inteiro." })
-    .positive({ message: "A quantidade de votos deve ser positiva." }),
+    .positive({ message: "A quantidade de votos deve ser positiva." })
+    .optional(),
 
   voteAverage: z.coerce
     .number({
       error: "A média de votos deve ser um número.",
     })
     .min(0, { message: "A média de votos deve ser pelo menos 0." })
-    .max(10, { message: "A média de votos não pode ser maior que 10." }),
+    .max(10, { message: "A média de votos não pode ser maior que 10." })
+    .optional(),
 });
 
-export type PopularityFormSchemaType = z.infer<typeof formSchema>
+export type PopularityFormSchemaType = z.infer<typeof popularityFormSchema>
 
 interface PopularityStepFormProps {
   values?: PopularityFormSchemaType;
@@ -33,8 +36,9 @@ export default function PopularityStepForm({
   values,
   onFormReady
 }: PopularityStepFormProps) {
+  const { resetTrigger } = useAddMovieFormWizard();
   const form = useForm<PopularityFormSchemaType>({
-    resolver: zodResolver(formSchema) as any,
+    resolver: zodResolver(popularityFormSchema) as any,
     defaultValues: values ?? {
       voteAverage: 0,
       voteCount: 0
@@ -46,6 +50,10 @@ export default function PopularityStepForm({
       onFormReady(form);
     }
   }, [form, onFormReady])
+
+  useEffect(() => {
+    form.reset();
+  }, [resetTrigger])
 
   return (
     <Form {...form}>

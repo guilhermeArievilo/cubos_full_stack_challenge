@@ -2,25 +2,34 @@
 
 import { useContainer } from "@/core/di/ContainerContext";
 import { useEffect, useState } from "react";
-import { Movie } from "../../../domain/entities/movie";
+import { Movie, MovieProps } from "../../../domain/entities/movie";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import AttributesMovie from "../../components/attributes-movie";
 import VoteAveragePerCentChart from "../../components/vote-average-per-cent-chart";
 import { Language } from "../../../domain/entities/language";
 import { RatingData } from "../../../domain/entities/rating";
-import { formatDateToDDMMYYYY, formatMinutesToReadable, formatNumber } from "@/lib/utils";
+import { formatDateToDDMMYYYY, formatMinutesToHHMMSS, formatMinutesToReadable, formatNumber } from "@/lib/utils";
 import { movieStatus } from "../../../domain/entities/movieStatus";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import AlertDeleteMovieDialog from "../../dialogs/alert-delete-movie/alert-delete-movie-dialog";
+import EditMovieDrawer from "../../drawers/edit-movie/edit-movie-drawer";
+import { Genre } from "../../../domain/entities/genre";
+import AddGenreDialog from "../../dialogs/add-genre/add-genre-dialog";
+import dayjs from "dayjs";
 
 export default function MovieDetailPage({ slug }: { slug: string }) {
   const router = useRouter();
   const [deleteMovieTrigger, setDeleteMovieTrigger] = useState<boolean>(false);
-  const [movie, setMovie] = useState<Movie | null>(null);
+  const [openEditDrawer, setEditDrawer] = useState<boolean>(false);
+  const [triggerAddGenrePopover, setTriggerAddGenrePopover] = useState<boolean>(false)
+  
   const { movieModule } = useContainer();
-
+  
+  const [genres, setGenres] = useState<Genre[]>([])
+  const [atualCreatedGenre, setCreatedGenre] = useState<Genre | null>(null)
+  const [movie, setMovie] = useState<Movie | null>(null);
   const [languages, setLanguages] = useState<Language[]>([])
   const [ratings, setRatings] = useState<RatingData[]>([])
 
@@ -33,6 +42,28 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
       router.replace('/home');
     } catch {
       toast.error("Ops, algo deu errado ao deletar o filme.");
+    }
+  }
+  
+
+  async function createGenre(name: string) {
+    const genre = await movieModule.createGenre.execute(name);
+    setCreatedGenre(genre);
+    setTriggerAddGenrePopover(false);
+    await fetchGenres();
+  }
+
+  async function editMovie(data: Partial<MovieProps>) {
+    if (!movie) return;
+    try {
+      toast.error("Atualizando filme...");
+      await movieModule.updateMovie.execute(movie.id, data);
+      toast.success("Filme atualizado com sucesso.");
+      await fetchMovieBySlug();
+    } catch {
+      toast.error("Ops, algo deu errado ao atualizar o filme.");
+    } finally {
+      setEditDrawer(false);
     }
   }
   
@@ -51,7 +82,13 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
     setMovie(movie);
   }
 
+  async function fetchGenres() {
+    const data = await movieModule.listGenres.execute();
+    setGenres(data);
+  }
+
   useEffect(() => {
+    fetchGenres();
     fetchMovieBySlug();
     fetchLanguages();
     fetchRatings();
@@ -106,7 +143,7 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
         <div className="col-span-6 flex flex-col gap-4 py-8 z-10">
           <div className="flex justify-end items-center gap-4">
             <Button variant="secondary" onClick={() => setDeleteMovieTrigger(true)}>Deletar</Button>
-            <Button>Editar</Button>
+            <Button onClick={() => setEditDrawer(true)}>Editar</Button>
           </div>
 
           <div className="grid grid-cols-12 gap-4">
@@ -121,7 +158,7 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
                   <span>{movie.voteCount}</span>
                 </AttributesMovie>
               </div>
-              <VoteAveragePerCentChart voteAverage={movie.voteAverage}/>
+              <VoteAveragePerCentChart voteAverage={movie.voteAverage ?? 0}/>
             </div>
 
             <div className="col-span-6">
@@ -150,19 +187,19 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
 
             <div className="col-span-4">
               <AttributesMovie label="Orçamento" labelSize="sm">
-                <span>{formatNumber(movie.budget)}</span>
+                <span>{movie.budget ? formatNumber(movie.budget) : '--'}</span>
               </AttributesMovie>
             </div>
 
             <div className="col-span-4">
               <AttributesMovie label="Receita" labelSize="sm">
-                <span>{formatNumber(movie.revenue)}</span>
+                <span>{movie.revenue ? formatNumber(movie.revenue) : '--'}</span>
               </AttributesMovie>
             </div>
 
             <div className="col-span-4">
               <AttributesMovie label="Lucro" labelSize="sm">
-                <span>{formatNumber(movie.revenue - movie.budget)}</span>
+                <span>{movie.profit ? formatNumber(movie.profit) : '--'}</span>
               </AttributesMovie>
             </div>
           </div>
@@ -189,6 +226,28 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
         onClose={() => setDeleteMovieTrigger(false)}
         onConfirm={handleDeleteMovie}
         title={movie.title}
+      />
+      <EditMovieDrawer
+        values={{
+          ...movie,
+          genres: movie.genres
+            .filter((val): val is Genre => typeof val !== "string")
+            .map(val => val.id),
+          duration: formatMinutesToHHMMSS(movie.duration),
+          releaseDate: dayjs(movie.releaseDate).toString()
+        }}
+        open={openEditDrawer}
+        onOpenChange={(status) => setEditDrawer(status)}
+        genreDataOptions={genres}
+        onCreateGenre={() => setTriggerAddGenrePopover(true)}
+        ratingsDataOptions={ratings}
+        languageDataOptions={languages}
+        onSubmitMovie={editMovie}
+      />
+      <AddGenreDialog
+        open={triggerAddGenrePopover}
+        onOpenChange={setTriggerAddGenrePopover}
+        handleCreateGenre={createGenre}
       />
     </>
   )

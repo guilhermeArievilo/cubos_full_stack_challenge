@@ -3,22 +3,25 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DollarSign, DollarSignIcon } from "lucide-react";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import z from "zod";
+import { useAddMovieFormWizard } from "../wizard/add-movie-form-wizard-context";
 
-const formSchema = z.object({
+export const financialFormSchema = z.object({
   budget: z.coerce
     .number("O orçamento deve ser um número.")
     .min(0, { message: "O orçamento deve ser pelo menos 0." })
-    .positive('O orçamento deve ser um valor positivo.'),
+    .positive('O orçamento deve ser um valor positivo.')
+    .optional(),
   revenue: z.coerce
     .number("A receita deve ser um número.")
     .min(0, { message: "A receita deve ser pelo menos 0." })
-    .positive('A receita deve ser um valor positivo.'),
+    .positive('A receita deve ser um valor positivo.')
+    .optional(),
 })
 
-export type FinancialFormSchemaType = z.infer<typeof formSchema>
+export type FinancialFormSchemaType = z.infer<typeof financialFormSchema>
 
 interface FinancialStepFormProps {
   values?: FinancialFormSchemaType;
@@ -29,8 +32,9 @@ export default function FinancialStepForm({
   values,
   onFormReady
 }: FinancialStepFormProps) {
+  const { resetTrigger } = useAddMovieFormWizard();
   const form = useForm<FinancialFormSchemaType>({
-    resolver: zodResolver(formSchema) as any,
+    resolver: zodResolver(financialFormSchema) as any,
     defaultValues: values
   });
   
@@ -40,6 +44,9 @@ export default function FinancialStepForm({
     }
   }, [form, onFormReady]);
 
+  useEffect(() => {
+    form.reset();
+  }, [resetTrigger])
   return (
     <Form {...form}>
       <form className="grid grid-cols-2 gap-4">

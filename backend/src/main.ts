@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { DomainExceptionFilter } from './shared/exceptions/filter/domainException.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import FieldValidationError from './shared/exceptions/fieldValidationError';
 
 const frontendClient = process.env.CLIENT_URL;
 
@@ -13,7 +14,7 @@ async function bootstrap() {
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
-    exceptionFactory: (errors) => errors,
+    exceptionFactory: (errors) => new FieldValidationError(Object.values(errors[0].constraints!)[0]),
   }));
   app.useGlobalFilters(new DomainExceptionFilter())
 

@@ -12,6 +12,7 @@ interface AddMovieFormWizardContextType {
   prev: () => void;
   currentStep: number;
   setCurrentStep: (value: number) => void;
+  resetTrigger?: boolean;
   setCurrentFormMethods: (current:
     UseFormReturn<GeralFormSchemaType> |
     UseFormReturn<MediaFormSchemaType> |
@@ -58,7 +59,11 @@ interface AddMovieFormWizardProviderProps {
   onSubmit?: (data: MovieWizardData) => void 
 }
 
-export function AddMovieFormWizardProvider({ children, onSubmit, resetTrigger }: AddMovieFormWizardProviderProps) {
+export function AddMovieFormWizardProvider({
+  children,
+  onSubmit,
+  resetTrigger
+}: AddMovieFormWizardProviderProps) {
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [formMethods, setFormMethods] = useState<UseFormReturn<GeralFormSchemaType> | UseFormReturn<MediaFormSchemaType> | UseFormReturn<PopularityFormSchemaType> | UseFormReturn<FinancialFormSchemaType> | null>(null)
   const [fullData, setFullData] = useState<MovieWizardData | undefined>(undefined);
@@ -101,7 +106,7 @@ export function AddMovieFormWizardProvider({ children, onSubmit, resetTrigger }:
 
   useEffect(() => {
     setCurrentStep(1);
-    formMethods?.reset();
+    setFullData(undefined);
   }, [resetTrigger])
   return (
     <AddMovieFormWizardContext.Provider value={{
@@ -111,7 +116,8 @@ export function AddMovieFormWizardProvider({ children, onSubmit, resetTrigger }:
       setCurrentStep,
       setCurrentFormMethods,
       fullData: fullData!,
-      steps
+      steps,
+      resetTrigger
     }}>
       {children}
     </AddMovieFormWizardContext.Provider>

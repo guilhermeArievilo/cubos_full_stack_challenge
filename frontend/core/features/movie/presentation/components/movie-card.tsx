@@ -17,7 +17,7 @@ export type MovieCardProps = {
 }
 
 export default function CMovieCard({ movie, onClick }: MovieCardProps) {
-  const voteAveragePerCent = (movie.voteAverage/10) * 100;
+  const voteAveragePerCent = movie.voteAverage ? (movie.voteAverage/10) * 100 : 0;
   const chartData = [
     { browser: "safari", voteAverage: voteAveragePerCent, fill: "var(--color-safari)" },
   ]

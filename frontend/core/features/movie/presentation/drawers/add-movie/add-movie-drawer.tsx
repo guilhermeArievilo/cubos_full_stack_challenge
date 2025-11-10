@@ -23,6 +23,7 @@ interface AddMovieDrawerProps {
   ratingsDataOptions?: RatingData[];
   createdGenres?: Genre[];
   languageDataOptions?: Language[];
+  resetTrigger?: boolean;
 }
 
 export default function AddMovieDrawer({
@@ -35,7 +36,8 @@ export default function AddMovieDrawer({
   genreDataOptions,
   ratingsDataOptions,
   createdGenres,
-  languageDataOptions
+  languageDataOptions,
+  resetTrigger
 }: AddMovieDrawerProps) {
   const [reset, setReset] = useState<boolean>(false);
 
@@ -45,9 +47,8 @@ export default function AddMovieDrawer({
       onClose();
     }
   }
-
   return (
-    <AddMovieFormWizardProvider onSubmit={onSubmitMovie} resetTrigger={reset}>
+    <AddMovieFormWizardProvider onSubmit={onSubmitMovie} resetTrigger={reset || resetTrigger}>
       <Drawer open={open} onOpenChange={onOpenChange} onClose={handleOnClose} direction="right">
         <DrawerContent>
           <DrawerHeader className="flex-row justify-between items-center gap-4">

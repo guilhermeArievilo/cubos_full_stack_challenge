@@ -1,6 +1,5 @@
 import { Replace } from "@/shared/helpers/Replace";
 import { MovieStatus } from "./movieStatus";
-import User from "@/core/user/domain/entity/user";
 import createSlug from "@/shared/helpers/slugify";
 import generateId from "@/shared/helpers/generateUUID";
 import Genre from "./genre";
@@ -15,12 +14,12 @@ export type MovieProps = {
   backdropPath: string;
   posterPath: string;
   rating: Rating;
-  voteCount: number;
-  voteAverage: number;
+  voteCount?: number;
+  voteAverage?: number;
   duration: number;
   status: MovieStatus;
-  budget: number;
-  revenue: number;
+  budget?: number;
+  revenue?: number;
   originalLanguage: string;
   trailerLink: string;
   releaseDate: Date;
@@ -119,19 +118,19 @@ export default class Movie {
     this.props.rating = rating;
   }
 
-  public get voteCount(): number {
+  public get voteCount(): number | undefined {
     return this.props.voteCount;
   }
 
-  public set voteCount(voteCount: number) {
+  public set voteCount(voteCount: number | undefined) {
     this.props.voteCount = voteCount;
   }
 
-  public get voteAverage(): number {
+  public get voteAverage(): number | undefined {
     return this.props.voteAverage;
   }
 
-  public set voteAverage(voteAverage: number) {
+  public set voteAverage(voteAverage: number | undefined) {
     this.props.voteAverage = voteAverage;
   }
 
@@ -151,24 +150,25 @@ export default class Movie {
     this.props.status = status;
   }
 
-  public get budget(): number {
+  public get budget(): number | undefined {
     return this.props.budget;
   }
 
-  public set budget(budget: number) {
+  public set budget(budget: number | undefined) {
     this.props.budget = budget;
   }
 
-  public get revenue(): number {
+  public get revenue(): number | undefined {
     return this.props.revenue;
   }
 
-  public set revenue(revenue: number) {
+  public set revenue(revenue: number | undefined) {
     this.props.revenue = revenue;
   }
 
-  public get profit(): number {
-    return this.props.revenue - this.props.budget;
+  public get profit(): number | undefined {
+    if (!this.props.revenue && !this.props.budget) return undefined;
+    return this.props.revenue! - this.props.budget!;
   }
 
   public get originalLanguage(): string {

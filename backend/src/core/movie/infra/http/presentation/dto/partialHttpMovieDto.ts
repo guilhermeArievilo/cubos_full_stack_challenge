@@ -6,6 +6,7 @@ export class PartialHttpMovieDTO {
   slug: string;
   genres: GenreHttpDto[];
   posterPath: string;
-  voteCount: number;
-  voteAverage: number;
+  voteCount?: number;
+  voteAverage?: number;
+  profit?: number;
 }
