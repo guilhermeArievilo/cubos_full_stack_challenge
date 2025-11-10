@@ -43,6 +43,11 @@ export default class MovieRemoteDatasource {
     return res.data;
   }
 
+  public async isOwnerMovie(movieId: string) {
+    const res =  await api.get<{ status: boolean }>(`/movie/is-onwer/${movieId}`);
+    return res.data;
+  }
+
   public async updateMovie(id: string, data: Partial<MovieProps>): Promise<void> {
     await api.patch(`/movie/${id}`, data);
   }

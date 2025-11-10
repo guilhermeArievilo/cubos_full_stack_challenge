@@ -14,7 +14,7 @@ interface AuthContextProps {
   login: (credentials: LoginDTO) => Promise<void>
   logout: () => Promise<void>,
   status: AuthStatus,
-  isAuthenticated: boolean
+  isAuthenticated: boolean,
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus>('unauthenticated');
   const router = useRouter();
   const pathname = usePathname()
-  const { authModule } = useContainer()
+  const { authModule, userModule } = useContainer()
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -67,11 +67,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isAuthenticated) {
       setStatus('unauthenticated');
+      userModule.clearUserData.execute()
       if (!restrictedRoutesWhenAuthenticated.includes(pathname)) {
         router.replace('/');
       }
     } else {
       setStatus('authenticated');
+      userModule.findUser.execute();
       if (restrictedRoutesWhenAuthenticated.includes(pathname)) {
         router.replace('/home');
       }

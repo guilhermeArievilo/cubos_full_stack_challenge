@@ -23,17 +23,26 @@ import BucketRemoteUploadDatasource from "@/core/features/upload/data/datasource
 import UploadRemoteDatasource from "@/core/features/upload/data/datasource/uploadRemoteDatasource";
 import UploadRepositoryImpl from "@/core/features/upload/data/repository/uploadRepositoryImpl";
 import UploadUseCase from "@/core/features/upload/domain/use-cases/uploadFileUseCase";
+import UserRemoteDatasource from "../features/user/data/datasource/userRemoteDatasource";
+import { UserStoreDatasource } from "../features/user/data/datasource/userStoreDatasource";
+import UserRepositoryImpl from "../features/user/data/repository/userRepositoryImpl";
+import findUserUseCase from "../features/user/domain/use-cases/findUserUseCase";
+import getLocalUserUseCase from "../features/user/domain/use-cases/getLocalUser";
+import ClearUserDataUseCase from "../features/user/domain/use-cases/clearUserDataUseCase";
+import IsOwnerMovieUseCase from "../features/movie/domain/use-cases/isOwnerMovieUseCase";
 
 
 
 type createContainerProps = {
-  authStore: AuthStoreDatasource
+  authStore: AuthStoreDatasource,
+  userStore: UserStoreDatasource
 }
 
 export type AppContainer = ReturnType<typeof createContainer>
 
 export function createContainer({
-  authStore
+  authStore,
+  userStore
 }: createContainerProps) {
   const authRemoteDatasource = new AuthRemoteDatasource();
   const authRepository = new AuthRepositoryImpl(authRemoteDatasource, authStore);
@@ -43,6 +52,16 @@ export function createContainer({
     logoutUseCase: new LogoutUseCase(authRepository),
     refreshUseCase: new RefreshUseCase(authRepository),
     registerUseCase: new RegisterUseCase(authRepository)
+  }
+
+  const userRemoteDatasource = new UserRemoteDatasource();
+  
+  const userRepositoryImpl = new UserRepositoryImpl(userRemoteDatasource, userStore);
+
+  const userModule = {
+    findUser: new findUserUseCase(userRepositoryImpl),
+    getLocalUser: new getLocalUserUseCase(userRepositoryImpl),
+    clearUserData: new ClearUserDataUseCase(userRepositoryImpl)
   }
 
   const movieRemoteDatasource = new MovieRemoteDatasource();
@@ -66,7 +85,8 @@ export function createContainer({
     listMovies: new ListMoviesUseCase(movieRepository),
     listLanguages: new ListLanguagesUseCase(movieRepository),
     updateMovie: new UpdateMovieUseCase(movieRepository),
-    listRatings: new ListRatingsUseCase(movieRepository)
+    listRatings: new ListRatingsUseCase(movieRepository),
+    isMovieOwner: new IsOwnerMovieUseCase(movieRepository)
   }
 
   const bucketRemoteUploadDatasource = new BucketRemoteUploadDatasource();
@@ -84,6 +104,7 @@ export function createContainer({
   return {
     authModule,
     movieModule,
-    uploadModule
+    uploadModule,
+    userModule
   }
 }

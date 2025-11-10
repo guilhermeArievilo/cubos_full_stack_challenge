@@ -17,6 +17,7 @@ import FindUserByEmailUseCase from "@/core/user/domain/application/use-cases/fin
 import DeleteMovieUseCase from "@/core/movie/domain/application/use-cases/deleteMovieUseCase";
 import { PartialHttpMovieDTO } from "../presentation/dto/partialHttpMovieDto";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import IsOwnerMovieUseCase from "@/core/movie/domain/application/use-cases/isOwnerMovieUseCase";
 
 @ApiBearerAuth()
 @ApiTags('Movies')
@@ -29,7 +30,8 @@ export class MovieController {
     private listMoviesUseCase: ListMoviesUseCase,
     private updateMovieUseCase: UpdateMovieUseCase,
     private deleteMovieUseCase: DeleteMovieUseCase,
-    private findUserByEmailUseCase: FindUserByEmailUseCase
+    private findUserByEmailUseCase: FindUserByEmailUseCase,
+    private isOwnerMovieUseCase: IsOwnerMovieUseCase
   ) {}
 
   @ApiOperation({ summary: 'Cadastrar um novo filme' })
@@ -89,6 +91,21 @@ export class MovieController {
       limit: domainMovies.limit,
       page: domainMovies.page,
       total: domainMovies.total
+    }
+  }
+
+  @Get('/is-onwer/:id')
+  async isOwner(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') movieId: string
+  ) {
+    const { email } = req.user as JwtPayload;
+    const user = await this.findUserByEmailUseCase.execute(email);
+    
+    const result = await this.isOwnerMovieUseCase.execute(user.id!, movieId);
+
+    return {
+      status: result
     }
   }
 

@@ -4,6 +4,7 @@ export default class UserViewModel {
   static toHttp(data: User) {
     const { name, email } = data.toJSON();
     return {
+      id: data.id,
       name,
       email
     }

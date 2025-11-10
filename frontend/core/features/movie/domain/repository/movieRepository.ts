@@ -1,3 +1,4 @@
+import { boolean } from "zod";
 import { Genre, GenreProps } from "../entities/genre";
 import { Language } from "../entities/language";
 import { Movie, MovieCard, MovieProps } from "../entities/movie";
@@ -34,6 +35,7 @@ export default abstract class MovieRepository {
   abstract deleteMovie(id: string): Promise<void>
   abstract addGenre(name: string): Promise<Genre>
   abstract findGenreBySlug(slug: string): Promise<Genre>
+  abstract isOwner(movieId: string): Promise<{ status: boolean }>
   abstract listGenres(): Promise<Genre[]>
   abstract listLanguages(): Promise<Language[]>
   abstract listRatings(): Promise<RatingData[]>

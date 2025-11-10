@@ -4,4 +4,5 @@ export default abstract class UserRepository {
   abstract findUser(): Promise<User>
   abstract saveUser(user: User): void
   abstract getLocalUser(): User | null
+  abstract clearLocalUserInfo(): void
 }

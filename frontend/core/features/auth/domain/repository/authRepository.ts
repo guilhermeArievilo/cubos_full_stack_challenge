@@ -1,4 +1,4 @@
-import type { User } from '@/features/user/domain/entity/user'
+import { User } from '@/core/features/user/domain/entity/user';
 import type { LoginDTO, RegisterDTO, TokenDto } from '../entities/authEntities'
 
 export default abstract class AuthRepository {

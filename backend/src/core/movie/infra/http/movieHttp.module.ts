@@ -15,6 +15,7 @@ import ListLanguagesUseCase from "../../domain/application/use-cases/listLanguag
 import { LanguageController } from "./controller/language.controller";
 import ListRatingsUseCase from "../../domain/application/use-cases/listRatingsUseCase";
 import { RatingController } from "./controller/rating.controller";
+import IsOwnerMovieUseCase from "../../domain/application/use-cases/isOwnerMovieUseCase";
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { RatingController } from "./controller/rating.controller";
     ListGenresUseCase,
     CreateGenreUseCase,
     ListLanguagesUseCase,
-    ListRatingsUseCase
+    ListRatingsUseCase,
+    IsOwnerMovieUseCase
   ],
 })
 export class MovieHttpModule {}

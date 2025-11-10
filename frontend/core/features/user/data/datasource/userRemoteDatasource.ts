@@ -1,17 +1,16 @@
-import type { Axios } from 'axios'
-import type { User } from '../../domain/entity/user'
 import { RegisterDTO } from '@/core/features/auth/domain/entities/authEntities'
+import type { User } from '../../domain/entity/user'
+import api from '@/infra/http/axios/api'
 
 export default class UserRemoteDatasource {
-  constructor(private apiClient: Axios) {}
 
   public async findUser() {
-    const res = await this.apiClient.get<User>('/user')
+    const res = await api.get<User>('/user')
     return res.data
   }
 
   public async register(userData: RegisterDTO) {
-    const res = await this.apiClient.post<User>('/user/register', userData)
+    const res = await api.post<User>('/user/register', userData)
     return res.data
   }
 }

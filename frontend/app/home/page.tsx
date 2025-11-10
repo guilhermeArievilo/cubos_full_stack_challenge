@@ -18,6 +18,7 @@ import { ListMoviesParamsRequestDto, PaginatedDataResponseDto } from "@/core/fea
 import { useContainer } from "@/core/di/ContainerContext";
 import CMovieCard from "@/core/features/movie/presentation/components/movie-card";
 import Link from "next/link";
+import CustomPagination from "@/components/custom-pagination";
 
 export default function HomePage() {
   const [triggerReset, setTriggerReset] = useState<boolean>(false);
@@ -118,7 +119,7 @@ export default function HomePage() {
         <Button onClick={() => setTriggerAddMovieDrawer(true)}>Adicionar Filme</Button>
       </section>
 
-      <section className="flex-1 grid grid-cols-10 gap-6 bg-surface-container-highest/30 backdrop-blur-xs p-6 mx-6 mb-6">
+      <section className="flex-1 grid grid-cols-10 gap-6 bg-surface-container-highest/30 backdrop-blur-xs p-6 mx-6">
         {
           !moviePaginatedData ? (
             <span className="col-span-10 flex items-center justify-center text-on-surface-variant/40">Nenhum filme por enquanto...</span>
@@ -131,6 +132,14 @@ export default function HomePage() {
           )
         }
       </section>
+
+      {
+        moviePaginatedData && (
+          <section className="flex items-center justify-center gap-6 mb-6">
+            <CustomPagination currentPage={query.page!} totalPages={Math.ceil(moviePaginatedData.total / query.limit!)}/>
+          </section>
+        )
+      }
       
       <AddMovieDrawer
         open={triggerAddMovieDrawer}

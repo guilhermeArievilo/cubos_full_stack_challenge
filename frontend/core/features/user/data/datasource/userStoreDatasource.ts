@@ -1,15 +1,19 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import type { User } from '../../domain/entity/user'
+import { create } from "zustand"
+import { User } from "../../domain/entity/user"
 
-export const useUserStore = defineStore('user', () => {
-  const user = ref<User | null>(null)
+export type UserStoreDatasource = {
+  user: User | null,
+  setUser: (user: User) => void,
+  clearUserData: () => void
+}
 
-  function setUser(user: User) {
-    user = user
-  }
 
-  return { user, setUser }
-})
-
-export type UserStoreDatasource = ReturnType<typeof useUserStore>
+export const useUserStore = create<UserStoreDatasource>((set) => ({
+  user: null,
+  setUser: (user: User) => set(() => ({
+    user
+  })),
+  clearUserData: () => set(() => ({
+    user: null
+  }))
+}))

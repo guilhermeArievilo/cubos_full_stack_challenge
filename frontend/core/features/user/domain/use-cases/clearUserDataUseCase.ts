@@ -1,10 +1,10 @@
 import type { User } from '../entity/user'
 import type UserRepository from '../repository/userRepository'
 
-export default class getLocalUserUseCase {
+export default class ClearUserDataUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  execute(): User | null {
-    return this.userRepository.getLocalUser()
+  async execute() {
+    this.userRepository.clearLocalUserInfo()
   }
 }

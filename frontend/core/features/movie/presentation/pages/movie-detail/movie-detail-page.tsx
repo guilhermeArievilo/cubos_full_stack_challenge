@@ -18,6 +18,8 @@ import EditMovieDrawer from "../../drawers/edit-movie/edit-movie-drawer";
 import { Genre } from "../../../domain/entities/genre";
 import AddGenreDialog from "../../dialogs/add-genre/add-genre-dialog";
 import dayjs from "dayjs";
+import { useUserStore } from "@/core/features/user/data/datasource/userStoreDatasource";
+import ResourceNotFound from "@/core/exceptions/errors/resourceNotFound";
 
 export default function MovieDetailPage({ slug }: { slug: string }) {
   const router = useRouter();
@@ -26,6 +28,8 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
   const [triggerAddGenrePopover, setTriggerAddGenrePopover] = useState<boolean>(false)
   
   const { movieModule } = useContainer();
+
+  const [owner, setOwner] = useState<boolean>(false);
   
   const [genres, setGenres] = useState<Genre[]>([])
   const [atualCreatedGenre, setCreatedGenre] = useState<Genre | null>(null)
@@ -45,6 +49,11 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
     }
   }
   
+  async function fetchIsMovieOwner() {
+    if (!movie) return;
+    const res = await movieModule.isMovieOwner.execute(movie.id);
+    setOwner(res.status);
+  }
 
   async function createGenre(name: string) {
     const genre = await movieModule.createGenre.execute(name);
@@ -60,7 +69,7 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
       await movieModule.updateMovie.execute(movie.id, data);
       toast.success("Filme atualizado com sucesso.");
       await fetchMovieBySlug();
-    } catch {
+    } catch (e) {
       toast.error("Ops, algo deu errado ao atualizar o filme.");
     } finally {
       setEditDrawer(false);
@@ -78,8 +87,15 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
   }
 
   async function fetchMovieBySlug() {
-    const movie = await movieModule.getMovieBySlug.execute(slug);
-    setMovie(movie);
+    try {
+      const movie = await movieModule.getMovieBySlug.execute(slug);
+      setMovie(movie);
+    } catch (e) {
+      if (e instanceof ResourceNotFound) {
+        toast.error("Não encontramos esse filme.")
+        router.replace('/home');
+      }
+    }
   }
 
   async function fetchGenres() {
@@ -93,6 +109,12 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
     fetchLanguages();
     fetchRatings();
   }, [slug])
+
+  useEffect(() => {
+    if (movie) {
+      fetchIsMovieOwner();
+    }
+  }, [movie])
 
   if (!movie) {
     return <div className="flex flex-col justify-center items-center">Carregando...</div>
@@ -141,10 +163,14 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
         </div>
 
         <div className="col-span-6 flex flex-col gap-4 py-8 z-10">
-          <div className="flex justify-end items-center gap-4">
-            <Button variant="secondary" onClick={() => setDeleteMovieTrigger(true)}>Deletar</Button>
-            <Button onClick={() => setEditDrawer(true)}>Editar</Button>
-          </div>
+          {
+            owner && (
+              <div className="flex justify-end items-center gap-4">
+                <Button variant="secondary" onClick={() => setDeleteMovieTrigger(true)}>Deletar</Button>
+                <Button onClick={() => setEditDrawer(true)}>Editar</Button>
+              </div>
+            )
+          }
 
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12 flex gap-6 items-center">

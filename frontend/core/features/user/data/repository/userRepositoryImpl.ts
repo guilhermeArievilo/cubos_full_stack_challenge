@@ -9,11 +9,18 @@ export default class UserRepositoryImpl implements UserRepository {
     private readonly userLocalDatasource: UserStoreDatasource,
   ) {}
   saveUser(user: User): void {
-    this.userLocalDatasource.setUser(user)
+    const store = this.userLocalDatasource;
+    return store.setUser(user);
   }
 
   getLocalUser(): User | null {
-    return this.userLocalDatasource.user
+    const store = this.userLocalDatasource;
+    return store.user;
+  }
+
+  clearLocalUserInfo(): void {
+    const store = this.userLocalDatasource;
+    store.clearUserData();
   }
 
   async findUser(): Promise<User> {

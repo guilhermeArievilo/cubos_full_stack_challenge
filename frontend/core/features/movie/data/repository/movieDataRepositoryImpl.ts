@@ -16,6 +16,10 @@ export default class MovieDataRepositoryImpl implements MovieRepository {
     private ratingRemoteDatasource: RatingRemoteDatasource
   ) {}
 
+  async isOwner(movieId: string): Promise<{ status: boolean; }> {
+    return await this.movieRemoteDatasource.isOwnerMovie(movieId);
+  }
+
   async listRatings(): Promise<RatingData[]> {
     return await this.ratingRemoteDatasource.listRatings();
   }
