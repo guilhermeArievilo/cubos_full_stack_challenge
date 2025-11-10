@@ -19,7 +19,7 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-const restrictedRoutesWhenAuthenticated = ['/', '/sign-up', '/forgot-password'];
+const restrictedRoutesWhenAuthenticated = ['/auth/login', '/auth/sign-up', '/auth/forgot-password'];
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuthStore();
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setStatus('authenticating');
       await authModule.loginUseCase.execute(credentials);
-      router.replace('/home');
+      router.replace('/movies');
       setStatus('authenticated');
     } catch (e: any) {
       toast.error(e.message ?? "Ops, algo deu errado");
@@ -75,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setStatus('authenticated');
       userModule.findUser.execute();
       if (restrictedRoutesWhenAuthenticated.includes(pathname)) {
-        router.replace('/home');
+        router.replace('/movies');
       }
     }
   }, [isAuthenticated, pathname, router]);

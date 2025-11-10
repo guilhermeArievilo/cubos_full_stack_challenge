@@ -121,41 +121,43 @@ export default function ApplyFiltersForm({
         <div className="col-span-2 flex flex-col gap-2">
           <span className="text-xl font-semibold">Data de lançamento</span>
 
-          <FormField
-            control={form.control}
-            name="releaseDateStart"
-            render={({ field }) => (
-              <FormItem className="col-span-1">
-                <FormLabel>Começo</FormLabel>
-                <FormControl>
-                  <Input
-                    type="date"
-                    placeholder="Começo"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage/>
-              </FormItem>
-            )}
-          />
+          <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="releaseDateStart"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Começo</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="date"
+                      placeholder="Começo"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage/>
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="releaseDateEnd"
-            render={({ field }) => (
-              <FormItem className="col-span-1">
-                <FormLabel>Final</FormLabel>
-                <FormControl>
-                  <Input
-                    type="date"
-                    placeholder="Final"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage/>
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="releaseDateEnd"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Final</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="date"
+                      placeholder="Final"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage/>
+                </FormItem>
+              )}
+            />
+          </div>
 
           <Button type="button" variant={'secondary'} onClick={() => {
             form.setValue('releaseDateStart', '');

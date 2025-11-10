@@ -18,7 +18,6 @@ import EditMovieDrawer from "../../drawers/edit-movie/edit-movie-drawer";
 import { Genre } from "../../../domain/entities/genre";
 import AddGenreDialog from "../../dialogs/add-genre/add-genre-dialog";
 import dayjs from "dayjs";
-import { useUserStore } from "@/core/features/user/data/datasource/userStoreDatasource";
 import ResourceNotFound from "@/core/exceptions/errors/resourceNotFound";
 
 export default function MovieDetailPage({ slug }: { slug: string }) {
@@ -43,7 +42,7 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
       toast.error("Deletando filme...");
       await movieModule.deleteMovie.execute(movie.id);
       toast.success("Filme deletado com sucesso.");
-      router.replace('/home');
+      router.replace('/movies');
     } catch {
       toast.error("Ops, algo deu errado ao deletar o filme.");
     }
@@ -93,7 +92,7 @@ export default function MovieDetailPage({ slug }: { slug: string }) {
     } catch (e) {
       if (e instanceof ResourceNotFound) {
         toast.error("Não encontramos esse filme.")
-        router.replace('/home');
+        router.replace('/movies');
       }
     }
   }

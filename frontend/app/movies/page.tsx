@@ -2,9 +2,9 @@
 import { Button } from "@/components/ui/button";
 import SearchForm from "@/core/features/movie/presentation/components/searchForm";
 import AddGenreDialog from "@/core/features/movie/presentation/dialogs/add-genre/add-genre-dialog";
-import AddMovieFilterDialog from "@/core/features/movie/presentation/dialogs/add-filter/add-movie-fliter-dialog";
+import AddMovieFilterDialog, { FiltersType } from "@/core/features/movie/presentation/dialogs/add-filter/add-movie-fliter-dialog";
 import AddMovieDrawer from "@/core/features/movie/presentation/drawers/add-movie/add-movie-drawer";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Genre } from "@/core/features/movie/domain/entities/genre";
 import { Language } from "@/core/features/movie/domain/entities/language";
 import { ContentType } from "@/core/features/upload/domain/entities/contentType";
@@ -19,17 +19,29 @@ import { useContainer } from "@/core/di/ContainerContext";
 import CMovieCard from "@/core/features/movie/presentation/components/movie-card";
 import Link from "next/link";
 import CustomPagination from "@/components/custom-pagination";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function HomePage() {
   const [triggerReset, setTriggerReset] = useState<boolean>(false);
   const [triggerAddMovieDrawer, setTriggerAddMovieDrawer] = useState<boolean>(false)
   const [triggerAddMovieFliterDialog, setTriggerAddMovieFliterDialog] = useState<boolean>(false)
   const [triggerAddGenrePopover, setTriggerAddGenrePopover] = useState<boolean>(false)
+
+  const router = useRouter();
+
+  const searchParams = useSearchParams()
   const [query, setQuery] = useState<ListMoviesParamsRequestDto>({
-    limit: 10,
-    page: 1,
-    orderBy: 'title',
-    order: 'asc',
+    limit: Number(searchParams.get("limit")) || 10,
+    page: Number(searchParams.get("page")) || 1,
+    orderBy: searchParams.get("orderBy") as keyof MovieProps || 'title',
+    order: searchParams.get("order") as 'asc' | 'desc' || 'asc',
+    duration: Number(searchParams.get("duration")) || undefined,
+    genre: searchParams.get("genre") ?? undefined,
+    query: searchParams.get("query") ?? undefined,
+    releaseDate: searchParams.get("startReleaseDate") && searchParams.get("endReleaseDate") ? {
+      start: new Date(searchParams.get("startReleaseDate") as string),
+      end: new Date(searchParams.get("endReleaseDate") as string)
+    } : undefined
   })
 
   const { movieModule, uploadModule } = useContainer()
@@ -74,6 +86,34 @@ export default function HomePage() {
     }
   }
 
+  function filterBy({
+    genre,
+    duration,
+    releaseDateEnd,
+    releaseDateStart
+  }: FiltersType) {
+    const params = new URLSearchParams(searchParams.toString());
+    
+    genre ? params.set("genre", genre) : params.delete("genre");
+    duration ? params.set("duration", timeStringToMinutes(duration).toString()) : params.delete("duration");
+    
+    if (releaseDateEnd && releaseDateStart) {
+      params.set("startReleaseDate", releaseDateStart)
+      params.set("endReleaseDate", releaseDateEnd)
+    } else {
+      params.delete("startReleaseDate");
+      params.delete("endReleaseDate");
+    }
+
+    router.push(`?${params.toString()}`);
+  }
+
+  function searchBy(query?: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    query ? params.set("query", query) : params.delete("query");
+    router.push(`?${params.toString()}`);
+  }
+
   async function createGenre(name: string) {
     const genre = await movieModule.createGenre.execute(name);
     setCreatedGenre(genre);
@@ -111,10 +151,29 @@ export default function HomePage() {
   useEffect(() => {
     fetchMovies();
   }, [query])
+
+  useEffect(() => {
+    setQuery({
+      limit: Number(searchParams.get("limit")) || 10,
+      page: Number(searchParams.get("page")) || 1,
+      orderBy: (searchParams.get("orderBy") as keyof MovieProps) || 'title',
+      order: (searchParams.get("order") as 'asc' | 'desc') || 'asc',
+      duration: Number(searchParams.get("duration")) || undefined,
+      genre: searchParams.get("genre") ?? undefined,
+      query: searchParams.get("query") ?? undefined,
+      releaseDate:
+        searchParams.get("startReleaseDate") && searchParams.get("endReleaseDate")
+          ? {
+              start: new Date(searchParams.get("startReleaseDate") as string),
+              end: new Date(searchParams.get("endReleaseDate") as string),
+            }
+          : undefined,
+    });
+  }, [searchParams.toString()]);
   return (
     <main className="grow flex flex-col gap-6">
       <section className="flex justify-end items-center gap-3 mt-6 mx-6">
-        <SearchForm handleSearch={(val) => setQuery({...query, query: val})} />
+        <SearchForm handleSearch={searchBy} />
         <Button variant={'secondary'} onClick={() => setTriggerAddMovieFliterDialog(true)}>Filtros</Button>
         <Button onClick={() => setTriggerAddMovieDrawer(true)}>Adicionar Filme</Button>
       </section>
@@ -164,15 +223,7 @@ export default function HomePage() {
           releaseDateStart: query.releaseDate ? query.releaseDate.start.toISOString().split('T')[0] : undefined,
           releaseDateEnd: query.releaseDate ? query.releaseDate.end.toISOString().split('T')[0] : undefined,
         }}
-        applyFilters={(values) => setQuery({
-          ...query,
-          duration: values.duration ? timeStringToMinutes(values.duration) : undefined,
-          genre: values.genre,
-          releaseDate: values.releaseDateStart && values.releaseDateEnd ? {
-            start: new Date(values.releaseDateStart),
-            end: new Date(values.releaseDateEnd)
-          } : undefined
-        })}
+        applyFilters={filterBy}
       />
       <AddGenreDialog
         open={triggerAddGenrePopover}

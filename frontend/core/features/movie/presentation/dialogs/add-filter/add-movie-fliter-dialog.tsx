@@ -5,7 +5,7 @@ import { Genre } from "../../../domain/entities/genre";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-type FiltersType = {
+export type FiltersType = {
   genre?: string;
   duration?: string;
   releaseDateStart?: string;
@@ -18,7 +18,6 @@ interface AddMovieFilterDialogProps {
   applyFilters?: (values: FiltersType) => void;
   filters?: FiltersType;
 }
-
 
 
 export default function AddMovieFilterDialog({
