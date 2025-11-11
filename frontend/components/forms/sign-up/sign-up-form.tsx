@@ -51,7 +51,7 @@ export default function SignUpForm({ handleSignUp }: SignUpFormProps) {
   return (
     <Form {...form}>
       <form
-        className="w-md bg-surface-container p-4 flex flex-col gap-4 items-center rounded-xs"
+        className="w-full sm:w-md bg-surface-container p-4 flex flex-col gap-4 items-center rounded-xs"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField

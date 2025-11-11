@@ -60,7 +60,6 @@ api.interceptors.response.use(
         return api(originalRequest)
       } catch (err) {
         processQueue(err, null);
-        await api.post('/auth/logout');
         useAuthStore.getState().clearAccessToken();
         return Promise.reject(err);
       } finally {

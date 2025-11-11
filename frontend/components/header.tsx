@@ -34,7 +34,7 @@ export default function Header() {
         {
           !isAuthenticated ? (
             <Button asChild>
-              <Link href={'/sign-up'}>Criar Conta</Link>
+              <Link href={'/auth/sign-up'}>Criar Conta</Link>
             </Button>
           ) :
           (

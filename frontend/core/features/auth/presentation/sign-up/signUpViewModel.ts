@@ -16,7 +16,7 @@ export default function useSignUpViewModel() {
       setStatus('sending');
       await authModule.registerUseCase.execute(data);
       setStatus('success');
-      router.push('/')
+      router.push('/movies')
     } catch (e: any) {
       toast.error(e.message ?? "Ops, algo deu errado, tente de novo!");
     }
